@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
 :root {
-  --background: #E9E4CF;
-  /* Slightly darker cream background for improved contrast */
+  --background: #F1EAD7;
+  /* Warmer, original cream background */
   --foreground: #1A2E28;
   /* Very Dark Green */
   --forest: #064E3B;
@@ -39,22 +39,24 @@ body {
 
 /* Islamic Aesthetic utilities */
 .islamic-panel {
-  background: #FBF6EA;
-  border: 1px solid rgba(6, 78, 59, 0.12);
-  box-shadow: 0 6px 24px rgba(6, 78, 59, 0.08);
+  background: linear-gradient(180deg, #fffaf0 0%, #FBF6EA 100%);
+  border: 1px solid rgba(212, 175, 55, 0.08);
+  box-shadow: 0 8px 28px rgba(16, 24, 20, 0.06);
   border-radius: 1.5rem;
 }
 
 .islamic-card {
-  background: #FEFBF5;
-  border: 1px solid rgba(6, 78, 59, 0.12);
+  background: linear-gradient(180deg, #fffdf7 0%, #FEFBF5 100%);
+  border: 1px solid rgba(212, 175, 55, 0.10);
+  color: #0F2A1F;
   transition: all 0.28s ease;
+  box-shadow: 0 6px 18px rgba(12, 18, 14, 0.05), inset 0 -2px 0 rgba(212,175,55,0.02);
 }
 
 .islamic-card:hover {
-  border-color: var(--gold);
-  transform: translateY(-2px);
-  box-shadow: 0 12px 36px rgba(6, 78, 59, 0.12);
+  border-color: rgba(212, 175, 55, 0.28);
+  transform: translateY(-3px) scale(1.002);
+  box-shadow: 0 14px 40px rgba(12, 18, 14, 0.08), 0 2px 8px rgba(212,175,55,0.04);
 }
 
 .gold-border {
