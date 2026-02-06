@@ -38,3 +38,17 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/pages/building-your-application/deploying) for more details.
+
+## UI Updates
+
+Recent UI changes (branch: `feat/ui-design`):
+
+- Restored original warm cream background for the site.
+- Updated date / info cards to a premium Islamic look:
+	- Parchment-style gradients on card surfaces
+	- Subtle gold borders and accents
+	- Softer, layered shadows and improved text contrast
+
+These visual tweaks improve legibility and give cards a refined, premium aesthetic.
+
+If you want the cards more gold-accented or more subtle, open an issue or request a tweak.
