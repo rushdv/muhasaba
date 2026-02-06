@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
 :root {
-  --background: #FDFBF7;
-  /* Cream / Off-white */
+  --background: #E9E4CF;
+  /* Slightly darker cream background for improved contrast */
   --foreground: #1A2E28;
   /* Very Dark Green */
   --forest: #064E3B;
@@ -11,8 +11,10 @@
   /* Light Sage */
   --gold: #D4AF37;
   /* Soft Gold */
-  --sand: #F3EFE0;
-  /* Sand/Beige */
+  --sand: #E5DFC8;
+  /* Slightly darker sand */
+  --parchment: #D7C39A;
+  /* Deeper, more visible parchment */
 }
 
 @theme inline {
@@ -22,6 +24,7 @@
   --color-sage: var(--sage);
   --color-gold: var(--gold);
   --color-sand: var(--sand);
+  --color-parchment: var(--parchment);
 
   --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
   --font-serif: 'Playfair Display', serif;
@@ -36,22 +39,22 @@ body {
 
 /* Islamic Aesthetic utilities */
 .islamic-panel {
-  background: white;
-  border: 1px solid rgba(6, 78, 59, 0.1);
-  box-shadow: 0 4px 20px rgba(6, 78, 59, 0.05);
+  background: #FBF6EA;
+  border: 1px solid rgba(6, 78, 59, 0.12);
+  box-shadow: 0 6px 24px rgba(6, 78, 59, 0.08);
   border-radius: 1.5rem;
 }
 
 .islamic-card {
-  background: white;
-  border: 1px solid rgba(6, 78, 59, 0.08);
-  transition: all 0.3s ease;
+  background: #FEFBF5;
+  border: 1px solid rgba(6, 78, 59, 0.12);
+  transition: all 0.28s ease;
 }
 
 .islamic-card:hover {
   border-color: var(--gold);
   transform: translateY(-2px);
-  box-shadow: 0 10px 30px rgba(6, 78, 59, 0.1);
+  box-shadow: 0 12px 36px rgba(6, 78, 59, 0.12);
 }
 
 .gold-border {
