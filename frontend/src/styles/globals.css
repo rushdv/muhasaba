@@ -1,0 +1,48 @@
+@import "tailwindcss";
+
+:root {
+  --background: #0a0e14;
+  --foreground: #e2e8f0;
+  --emerald: #10b981;
+  --gold: #facc15;
+  --cyber-dark: #05070a;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-emerald: var(--emerald);
+  --color-gold: var(--gold);
+  --color-cyber-dark: var(--cyber-dark);
+  
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  min-height: 100vh;
+}
+
+/* Cyberpunk specific utilities */
+.glass-panel {
+  background: rgba(16, 185, 129, 0.05);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(16, 185, 129, 0.2);
+  box-shadow: 0 0 20px rgba(16, 185, 129, 0.1);
+}
+
+.gold-glow {
+  text-shadow: 0 0 10px rgba(250, 204, 21, 0.5);
+}
+
+.emerald-glow {
+  box-shadow: 0 0 15px rgba(16, 185, 129, 0.3);
+}
+
+.cyber-grid {
+  background-image: linear-gradient(rgba(16, 185, 129, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(16, 185, 129, 0.05) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
