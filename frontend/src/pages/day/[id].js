@@ -1,6 +1,7 @@
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useState, useEffect } from 'react';
+import Link from 'next/link';
 
 export default function DayEntry() {
     const router = useRouter();
@@ -11,12 +12,11 @@ export default function DayEntry() {
         quran_pages: 0,
         sunnah_habits: { dhikr: false, dua: false },
         notes: '',
-        mood: 'Neutral'
+        mood: 'Peaceful'
     });
 
     useEffect(() => {
         if (!id) return;
-        // In a real app, we'd fetch existing data for this day
         const dateStr = `2024-03-${id.toString().padStart(2, '0')}`;
         async function fetchData() {
             try {
@@ -63,32 +63,30 @@ export default function DayEntry() {
     if (!id) return null;
 
     return (
-        <div className="min-h-screen bg-background text-foreground cyber-grid p-4 md:p-8">
+        <div className="min-h-screen bg-background relative overflow-hidden pb-12">
+            <div className="absolute inset-0 spiritual-pattern pointer-events-none" />
+
             <Head>
-                <title>Day {id} | Muhasaba</title>
+                <title>Day {id} | Reflection</title>
+                <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@400;600&display=swap" rel="stylesheet" />
             </Head>
 
-            <header className="max-w-3xl mx-auto mb-10 flex items-center gap-6">
-                <button
-                    onClick={() => router.push('/')}
-                    className="glass-panel w-12 h-12 flex items-center justify-center text-emerald hover:text-gold transition-colors"
-                >
+            <header className="relative max-w-2xl mx-auto pt-10 px-4 mb-10 flex items-center justify-between">
+                <Link href="/" className="h-10 w-10 flex items-center justify-center rounded-full bg-white border border-forest/10 text-forest hover:bg-forest hover:text-white transition-all shadow-sm">
                     ←
-                </button>
-                <div>
-                    <h1 className="text-3xl md:text-5xl font-black text-emerald uppercase italic">
-                        Day <span className="text-gold">{id.padStart(2, '0')}</span>
-                    </h1>
-                    <p className="text-emerald/40 font-mono text-xs uppercase tracking-widest">Entry Protocol // Ramadan 1445</p>
+                </Link>
+                <div className="text-right">
+                    <h1 className="text-3xl font-serif text-forest">Day {id.padStart(2, '0')}</h1>
+                    <p className="text-[10px] uppercase tracking-widest text-gold font-bold">Ramadan reflection</p>
                 </div>
             </header>
 
-            <main className="max-w-3xl mx-auto">
-                <form onSubmit={handleSubmit} className="space-y-8">
+            <main className="relative max-w-2xl mx-auto px-4">
+                <form onSubmit={handleSubmit} className="space-y-6">
                     {/* Prayers Section */}
-                    <section className="glass-panel p-6 border-l-4 border-l-emerald">
-                        <h2 className="text-xl font-bold text-emerald uppercase mb-6 flex items-center gap-2">
-                            <span className="w-2 h-2 bg-gold animate-pulse" /> Daily Prayers
+                    <section className="bg-white p-8 rounded-3xl shadow-sm border border-forest/5">
+                        <h2 className="text-lg font-serif text-forest mb-6 flex items-center gap-3">
+                            <span className="h-2 w-2 rounded-full bg-gold" /> Salah Tracking
                         </h2>
                         <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
                             {['fajr', 'dhuhr', 'asr', 'maghrib', 'isha'].map((p) => (
@@ -97,10 +95,10 @@ export default function DayEntry() {
                                     type="button"
                                     onClick={() => togglePrayer(p)}
                                     className={`
-                    p-3 border font-mono text-xs uppercase tracking-tighter transition-all
+                    py-3 rounded-xl border font-sans text-xs font-semibold uppercase tracking-wider transition-all
                     ${formData.prayers[p]
-                                            ? 'bg-emerald text-cyber-dark border-emerald shadow-[0_0_15px_rgba(16,185,129,0.4)]'
-                                            : 'border-emerald/30 text-emerald/60 hover:border-emerald'}
+                                            ? 'bg-forest text-white border-forest shadow-md'
+                                            : 'bg-white border-forest/10 text-forest/40 hover:border-forest/30'}
                   `}
                                 >
                                     {p}
@@ -111,19 +109,20 @@ export default function DayEntry() {
 
                     {/* Quran & Habits */}
                     <div className="grid md:grid-cols-2 gap-6">
-                        <section className="glass-panel p-6 border-l-4 border-l-gold">
-                            <h2 className="text-xl font-bold text-gold uppercase mb-6">Quran Pages</h2>
+                        <section className="bg-white p-8 rounded-3xl shadow-sm border border-forest/5">
+                            <h2 className="text-lg font-serif text-forest mb-4">Quran Pages</h2>
                             <input
                                 type="number"
                                 value={formData.quran_pages}
                                 onChange={(e) => setFormData({ ...formData, quran_pages: parseInt(e.target.value) || 0 })}
-                                className="w-full bg-cyber-dark border border-gold/30 p-4 text-gold text-2xl font-black focus:border-gold outline-none transition-all"
+                                className="w-full bg-sand/30 border-b-2 border-forest/10 py-2 text-3xl font-bold text-forest focus:border-gold outline-none transition-all placeholder-forest/10"
+                                placeholder="0"
                             />
                         </section>
 
-                        <section className="glass-panel p-6 border-l-4 border-l-emerald">
-                            <h2 className="text-xl font-bold text-emerald uppercase mb-6">Sunnah Habits</h2>
-                            <div className="space-y-3">
+                        <section className="bg-white p-8 rounded-3xl shadow-sm border border-forest/5">
+                            <h2 className="text-lg font-serif text-forest mb-4">Daily Habits</h2>
+                            <div className="flex flex-wrap gap-2">
                                 {Object.keys(formData.sunnah_habits).map((h) => (
                                     <button
                                         key={h}
@@ -133,13 +132,13 @@ export default function DayEntry() {
                                             sunnah_habits: { ...formData.sunnah_habits, [h]: !formData.sunnah_habits[h] }
                                         })}
                                         className={`
-                      w-full p-3 border font-mono text-xs uppercase text-left transition-all
+                      px-4 py-2 rounded-full text-[10px] font-bold uppercase tracking-widest transition-all
                       ${formData.sunnah_habits[h]
-                                                ? 'bg-emerald/20 text-emerald border-emerald'
-                                                : 'border-emerald/20 text-emerald/40'}
+                                                ? 'bg-gold text-white shadow-sm'
+                                                : 'bg-sand/50 text-forest/40 hover:bg-sand'}
                     `}
                                     >
-                                        [{formData.sunnah_habits[h] ? 'X' : ' '}] {h}
+                                        {h}
                                     </button>
                                 ))}
                             </div>
@@ -147,22 +146,22 @@ export default function DayEntry() {
                     </div>
 
                     {/* Notes */}
-                    <section className="glass-panel p-6">
-                        <h2 className="text-xl font-bold text-emerald uppercase mb-6">Daily Realization</h2>
+                    <section className="bg-white p-8 rounded-3xl shadow-sm border border-forest/5">
+                        <h2 className="text-lg font-serif text-forest mb-4">Daily Realization</h2>
                         <textarea
                             value={formData.notes}
                             onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
-                            placeholder="What did you learn today?"
-                            className="w-full bg-cyber-dark border border-emerald/20 p-4 text-emerald/80 h-32 focus:border-emerald outline-none transition-all resize-none"
+                            placeholder="What touched your heart today?"
+                            className="w-full bg-sand/10 border border-forest/5 p-4 text-forest/80 h-32 rounded-2xl focus:border-forest/20 outline-none transition-all resize-none italic"
                         />
                     </section>
 
                     <button
                         type="submit"
                         disabled={loading}
-                        className="w-full py-5 bg-emerald text-cyber-dark font-black text-xl uppercase tracking-widest hover:bg-gold transition-colors emerald-glow"
+                        className="w-full py-5 bg-forest text-white rounded-2xl font-bold text-lg uppercase tracking-[0.2em] shadow-xl hover:bg-forest/90 transition-all active:scale-[0.98]"
                     >
-                        {loading ? 'Transmitting...' : 'Upload Entry'}
+                        {loading ? 'Saving...' : 'Submit Entry'}
                     </button>
                 </form>
             </main>
