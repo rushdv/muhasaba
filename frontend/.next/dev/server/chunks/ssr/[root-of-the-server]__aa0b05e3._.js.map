@@ -1,6 +1,0 @@
-{
-  "version": 3,
-  "sources": [],
-  "sections": [
-    {"offset": {"line": 40, "column": 0}, "map": {"version":3,"sources":["file:///D:/Dev%20Projects/muhasaba/frontend/src/pages/_document.js"],"sourcesContent":["import { Html, Head, Main, NextScript } from \"next/document\";\r\n\r\nexport default function Document() {\r\n  return (\r\n    <Html lang=\"en\">\r\n      <Head />\r\n      <body className=\"antialiased\">\r\n        <Main />\r\n        <NextScript />\r\n      </body>\r\n    </Html>\r\n  );\r\n}\r\n"],"names":[],"mappings":";;;;;AAAA;;;AAEe,SAAS;IACtB,qBACE,qKAAC,iIAAI;QAAC,MAAK;;0BACT,qKAAC,iIAAI;;;;;0BACL,qKAAC;gBAAK,WAAU;;kCACd,qKAAC,iIAAI;;;;;kCACL,qKAAC,uIAAU;;;;;;;;;;;;;;;;;AAInB"}}]
-}
