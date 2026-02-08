@@ -21,6 +21,8 @@ class RamadanReport(Base):
     taraweeh = Column(Boolean, default=False)
     tahajjud = Column(Boolean, default=False)
     duha = Column(Boolean, default=False)
+    tahiyatul_masjid = Column(Boolean, default=False)
+    tahiyatul_wudu = Column(Boolean, default=False)
 
     # Sunnat/Nawafil
     sunnat_fajr = Column(Boolean, default=False)

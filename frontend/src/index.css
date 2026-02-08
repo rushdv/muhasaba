@@ -1,17 +1,23 @@
 @import "tailwindcss";
 
 @theme {
+  --color-emerald-950: #022c22;
   --color-emerald-900: #064e3b;
   --color-emerald-800: #065f46;
-  --color-emerald-700: #047857;
-  --color-gold: #b45309;
+  --color-gold-soft: #c5a059;
+  --color-gold-rich: #a37c35;
+  --color-marfil: #fdfaf3;
   --color-parchment: #fefce8;
-  --color-cream: #fffbeb;
+
+  --shadow-celestial: 0 8px 32px 0 rgba(6, 78, 59, 0.08);
+  --shadow-celestial-hover: 0 8px 32px 0 rgba(197, 160, 89, 0.15);
+  --shadow-gold-glow: 0 0 10px rgba(197, 160, 89, 0.3);
+  --shadow-gold-button: 0 10px 15px -3px rgba(197, 160, 89, 0.2);
 }
 
 @layer base {
   body {
-    @apply antialiased text-emerald-900 bg-parchment;
+    @apply antialiased text-emerald-950 bg-marfil;
     font-family: 'Inter', sans-serif;
   }
 
@@ -26,26 +32,25 @@
 }
 
 @layer components {
-  .islamic-card {
-    @apply bg-white/80 backdrop-blur-md border border-emerald-100 shadow-xl rounded-2xl;
+  .celestial-card {
+    @apply bg-white/60 backdrop-blur-xl border border-white/40 shadow-celestial rounded-3xl transition-all duration-500 hover:shadow-celestial-hover;
   }
 
-  .planner-card {
-    @apply bg-white border border-emerald-100 rounded-2xl shadow-sm transition-all hover:shadow-lg;
-    background-image: radial-gradient(#e5e7eb 0.5px, transparent 0.5px);
-    background-size: 20px 20px;
+  .celestial-button {
+    @apply bg-emerald-900 text-marfil px-8 py-4 rounded-2xl font-bold transition-all duration-300 shadow-lg hover:bg-emerald-800 hover:shadow-emerald-900/20 active:scale-95 border border-gold-soft/20;
   }
 
-  .islamic-input {
-    @apply bg-white/50 border border-emerald-200 p-3 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none transition-all;
+  .gold-gradient-text {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-gold-soft via-gold-rich to-gold-soft;
   }
 
-  .islamic-button {
-    @apply bg-emerald-800 text-parchment px-6 py-3 rounded-xl font-semibold hover:bg-emerald-900 transition-all shadow-md active:scale-95;
+  .islamic-input-modern {
+    @apply bg-white/40 border border-emerald-100 p-4 rounded-2xl focus:ring-2 focus:ring-gold-soft/30 focus:border-gold-soft outline-none transition-all duration-300;
   }
 }
 
-/* Subtle Geometric Pattern Overlay */
-.islamic-pattern {
-  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 0l15 30-15 30L15 30z' fill='%23064e3b' fill-opacity='0.03' fill-rule='evenodd'/%3E%3C/svg%3E");
+.celestial-pattern {
+  background-image:
+    radial-gradient(circle at 2px 2px, rgba(163, 124, 53, 0.05) 1px, transparent 0);
+  background-size: 40px 40px;
 }

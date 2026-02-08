@@ -15,6 +15,8 @@ class RamadanReportBase(BaseModel):
     taraweeh: bool = False
     tahajjud: bool = False
     duha: bool = False
+    tahiyatul_masjid: bool = False
+    tahiyatul_wudu: bool = False
 
     # Sunnat/Nawafil
     sunnat_fajr: bool = False
