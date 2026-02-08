@@ -12,3 +12,4 @@ class User(Base):
     is_active = Column(Boolean, default=True)
 
     logs = relationship("MuhasabaLog", back_populates="owner")
+    ramadan_reports = relationship("RamadanReport", back_populates="owner")
