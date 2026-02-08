@@ -1,132 +1,100 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Moon, Calendar, Activity, LogOut, Sparkles, Star, Heart } from 'lucide-react';
+import { Moon, LogOut, Sparkles, Activity, Clock, ChevronRight } from 'lucide-react';
 
 const Dashboard = () => {
     const navigate = useNavigate();
-
-    const modules = [
-        {
-            id: 'ramadan',
-            name: 'Ramadan Planner',
-            icon: <Moon size={40} />,
-            description: 'Track Fasting, Taraweeh & Daily Goals',
-            path: '/ramadan',
-            active: true,
-            color: 'bg-emerald-50 text-emerald-800 border-emerald-100',
-            iconColor: 'text-emerald-700'
-        },
-        {
-            id: 'muhasaba',
-            name: 'Daily Muhasaba',
-            icon: <Activity size={40} />,
-            description: 'Self-reflection & Daily Deeds',
-            path: '/daily-log',
-            active: false,
-            color: 'bg-amber-50 text-amber-800 border-amber-100',
-            iconColor: 'text-amber-700'
-        },
-        {
-            id: 'planner',
-            name: 'Yearly Planner',
-            icon: <Calendar size={40} />,
-            description: 'Manage your long-term vision',
-            path: '/planner',
-            active: false,
-            color: 'bg-stone-50 text-stone-800 border-stone-100',
-            iconColor: 'text-stone-700'
-        }
-    ];
 
     const logout = () => {
         localStorage.removeItem('token');
         navigate('/login');
     };
 
+    const modules = [
+        {
+            title: 'Ramadan Planner',
+            desc: 'Your daily companion for Ibadah, trackers & spiritual growth.',
+            icon: <Sparkles size={32} />,
+            path: '/ramadan',
+            color: 'bg-emerald-950',
+            textColor: 'text-gold-soft'
+        },
+        {
+            title: 'Spiritual Insights',
+            desc: 'Reflect on your journey with personalized Ramadan analytics.',
+            icon: <Activity size={32} />,
+            path: '/ramadan/wrapped',
+            color: 'bg-white',
+            textColor: 'text-gold-rich'
+        },
+        {
+            title: 'Muhasaba Logs',
+            desc: 'Maintain consistency through daily self-accountability.',
+            icon: <Clock size={32} />,
+            path: '/muhasaba',
+            color: 'bg-white',
+            textColor: 'text-emerald-900'
+        }
+    ];
+
     return (
-        <div className="min-h-screen bg-parchment islamic-pattern p-6 font-sans">
+        <div className="min-h-screen bg-marfil celestial-pattern pb-12">
             {/* Top Bar */}
-            <header className="max-w-6xl mx-auto flex justify-between items-center mb-12 py-6 border-b border-emerald-100">
-                <div className="flex items-center gap-3">
-                    <div className="p-2 bg-emerald-800 text-parchment rounded-lg shadow-md">
-                        <Sparkles size={24} />
+            <nav className="bg-white/40 backdrop-blur-xl border-b border-gold-soft/10 px-8 py-6 flex justify-between items-center sticky top-0 z-50">
+                <div className="flex items-center gap-4">
+                    <div className="w-12 h-12 bg-emerald-950 rounded-2xl flex items-center justify-center border border-gold-soft/30 shadow-lg">
+                        <Moon size={24} className="text-gold-soft" fill="currentColor" />
                     </div>
-                    <h1 className="text-3xl font-bold text-emerald-900 font-serif">
-                        Muhasaba <span className="text-emerald-700/60 text-xl font-normal">Hub</span>
-                    </h1>
+                    <div>
+                        <h1 className="text-2xl font-serif font-bold italic tracking-tight">Muhasaba</h1>
+                        <p className="text-[10px] uppercase font-bold tracking-[0.3em] text-gold-rich opacity-80">Ramadan Hub Pro</p>
+                    </div>
                 </div>
                 <button
                     onClick={logout}
-                    className="flex items-center gap-2 px-4 py-2 text-emerald-800 hover:bg-emerald-50 rounded-lg transition-colors font-semibold"
+                    className="flex items-center gap-3 px-6 py-2.5 bg-white border border-gold-soft/20 text-emerald-900 text-xs font-bold uppercase tracking-widest rounded-xl hover:bg-gold-soft/5 transition-all"
                 >
-                    <LogOut size={20} />
-                    <span>Sign Out</span>
+                    <LogOut size={16} /> Sign Out
                 </button>
-            </header>
+            </nav>
 
-            <main className="max-w-6xl mx-auto">
-                <div className="mb-10">
-                    <h2 className="text-4xl font-bold text-emerald-900 mb-2 font-serif">Assalamu Alaikum</h2>
-                    <p className="text-emerald-700 italic font-medium">Step forward every day in your spiritual journey.</p>
-                </div>
+            <main className="max-w-7xl mx-auto px-6 py-16">
+                <header className="mb-20">
+                    <p className="text-[10px] uppercase font-bold tracking-[0.5em] text-gold-rich mb-4">Peace be upon you,</p>
+                    <h2 className="text-6xl font-serif font-bold text-emerald-950 italic">Welcome Back</h2>
+                    <div className="w-24 h-1 bg-gold-soft mt-8 rounded-full shadow-lg shadow-gold-soft/20" />
+                </header>
 
-                {/* Grid Menu */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    {modules.map((module) => (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+                    {modules.map((m, i) => (
                         <div
-                            key={module.id}
-                            onClick={() => module.active && navigate(module.path)}
-                            className={`group relative p-8 rounded-2xl border-2 transition-all duration-500 overflow-hidden ${module.active
-                                    ? `${module.color} cursor-pointer hover:shadow-2xl hover:-translate-y-2 hover:border-emerald-200`
-                                    : 'bg-gray-50 text-gray-400 border-gray-100 grayscale opacity-70 cursor-not-allowed'
-                                }`}
+                            key={i}
+                            onClick={() => navigate(m.path)}
+                            className={`celestial-card p-1 relative overflow-hidden cursor-pointer group h-[400px]`}
                         >
-                            {/* Decorative background icon */}
-                            <div className="absolute -bottom-6 -right-6 opacity-5 group-hover:scale-110 transition-transform duration-700">
-                                {module.icon}
-                            </div>
+                            <div className={`w-full h-full p-10 rounded-[28px] transition-all duration-700 flex flex-col justify-between ${m.color} ${m.color === 'bg-emerald-950' ? 'text-marfil' : 'text-emerald-950'}`}>
+                                <div className="space-y-6">
+                                    <div className={`w-16 h-16 rounded-2xl flex items-center justify-center transition-transform duration-700 group-hover:scale-110 group-hover:rotate-6 ${m.color === 'bg-emerald-950' ? 'bg-white/10' : 'bg-emerald-50'}`}>
+                                        <div className={m.textColor}>{m.icon}</div>
+                                    </div>
+                                    <h3 className="text-3xl font-serif font-bold italic leading-tight">{m.title}</h3>
+                                    <p className={`text-sm leading-relaxed ${m.color === 'bg-emerald-950' ? 'opacity-60 font-medium' : 'text-emerald-900/40 font-bold uppercase tracking-widest text-[11px]'}`}>
+                                        {m.desc}
+                                    </p>
+                                </div>
 
-                            <div className={`mb-6 p-4 rounded-xl inline-block bg-white shadow-sm ${module.iconColor}`}>
-                                {module.icon}
-                            </div>
-
-                            <h3 className="text-2xl font-bold mb-3 font-serif flex items-center gap-2">
-                                {module.name}
-                                {module.active && <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />}
-                            </h3>
-
-                            <p className="text-sm leading-relaxed mb-6 font-medium leading-relaxed">
-                                {module.description}
-                            </p>
-
-                            <div className="flex items-center justify-between">
-                                {module.active ? (
-                                    <span className="text-xs font-bold uppercase tracking-widest text-emerald-600 bg-emerald-100 px-3 py-1 rounded-full">
-                                        Enter Hub
+                                <div className="flex items-center gap-4 group/link">
+                                    <div className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-300 ${m.color === 'bg-emerald-950' ? 'bg-gold-soft text-white' : 'bg-emerald-950 text-marfil'}`}>
+                                        <ChevronRight size={20} className="group-hover/btn:translate-x-1 transition-transform" />
+                                    </div>
+                                    <span className={`text-xs font-bold uppercase tracking-widest ${m.color === 'bg-emerald-950' ? 'text-gold-soft/60' : 'text-emerald-900/40'}`}>
+                                        {m.path === '/muhasaba' ? 'Coming Soon' : 'Explore'}
                                     </span>
-                                ) : (
-                                    <span className="text-[10px] font-bold uppercase tracking-widest bg-gray-200 text-gray-500 px-3 py-1 rounded-full">
-                                        Coming Soon
-                                    </span>
-                                )}
+                                </div>
                             </div>
                         </div>
                     ))}
                 </div>
-
-                {/* Footer Section */}
-                <footer className="mt-20 border-t border-emerald-100 pt-10 text-center">
-                    <div className="flex justify-center gap-8 mb-6">
-                        <div className="flex items-center gap-2 text-emerald-700/60 italic text-sm">
-                            <Star size={14} className="text-emerald-600" />
-                            <span>Dhulkarnayn Cycle</span>
-                        </div>
-                        <div className="flex items-center gap-2 text-emerald-700/60 italic text-sm">
-                            <Heart size={14} className="text-emerald-600" />
-                            <span>Tazkiyah Focused</span>
-                        </div>
-                    </div>
-                </footer>
             </main>
         </div>
     );
