@@ -42,3 +42,7 @@ def login(user_in: UserLogin, db: Session = Depends(get_db)):
 
     token = create_access_token({"sub": user.email})
     return {"access_token": token, "token_type": "bearer"}
+
+@router.get("/google")
+def google_auth():
+    return {"message": "Google OAuth flow triggered. Please configure client ID and secrets in .env"}

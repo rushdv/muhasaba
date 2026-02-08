@@ -119,14 +119,14 @@ const RamadanPlanner = () => {
                     <button
                         onClick={handleSave}
                         disabled={saving}
-                        className="celestial-button flex items-center gap-3 group px-6 md:px-8 py-3 md:py-4"
+                        className="celestial-button flex items-center gap-3 group px-6 md:px-8 py-3 md:py-4 transition-all hover:scale-[1.02] border-gold-soft/30"
                     >
                         {saving ? (
-                            <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                            <div className="w-5 h-5 border-2 border-marfil border-t-transparent rounded-full animate-spin" />
                         ) : (
                             <>
-                                <Save size={20} className="transition-transform group-hover:scale-110" />
-                                <span className="hidden sm:inline">Commit Efforts</span>
+                                <Save size={18} className="transition-transform group-hover:scale-110" />
+                                <span className="hidden sm:inline uppercase tracking-widest text-[11px]">Save Effort</span>
                             </>
                         )}
                     </button>
@@ -403,16 +403,16 @@ const RamadanPlanner = () => {
                                 <h2 className="font-serif text-2xl font-bold italic text-emerald-950 mb-1">30 Days Journey</h2>
                                 <p className="text-[10px] uppercase font-bold tracking-[0.3em] text-gold-rich opacity-60">Digital Spiritual Timeline</p>
                             </div>
-                            <div className="flex items-center gap-4 text-xs font-bold uppercase tracking-widest">
-                                <div className="w-3 h-3 rounded-full bg-gold-soft shadow-[0_0_8px_rgba(197,160,89,0.5)]" />
+                            <div className="flex items-center gap-4 text-[9px] font-bold uppercase tracking-widest">
+                                <div className="w-2.5 h-2.5 rounded-full bg-gold-rich shadow-[0_0_8px_rgba(163,124,53,0.4)]" />
                                 <span>Completed</span>
-                                <div className="w-3 h-3 rounded-full bg-emerald-900/10" />
-                                <span>Pending</span>
+                                <div className="w-2.5 h-2.5 rounded-full bg-emerald-900/5" />
+                                <span className="opacity-40">Pending</span>
                             </div>
                         </header>
 
-                        <div className="overflow-x-auto md:overflow-visible pb-4 md:pb-0 scrollbar-hide">
-                            <div className="flex md:grid md:grid-cols-6 lg:grid-cols-10 gap-3 min-w-max md:min-w-0">
+                        <div className="overflow-x-auto pb-4 scrollbar-hide">
+                            <div className="grid grid-cols-6 sm:grid-cols-10 md:grid-cols-6 lg:grid-cols-10 gap-2 md:gap-3">
                                 {Array.from({ length: 30 }, (_, i) => i + 1).map(d => {
                                     const isCompleted = history.some(r => r.day_number === d);
                                     const isCurrent = day === d;
@@ -420,17 +420,24 @@ const RamadanPlanner = () => {
                                         <button
                                             key={d}
                                             onClick={() => setDay(d)}
-                                            className={`w-12 h-12 md:w-full md:aspect-square rounded-2xl flex flex-col items-center justify-center transition-all duration-500 relative group
-                                                ${isCompleted ? 'bg-green-600 text-white shadow-lg' : 'bg-emerald-50 text-emerald-900/30'}
-                                                ${isCurrent ? 'ring-2 ring-gold-soft ring-offset-4 ring-offset-marfil scale-110' : 'hover:scale-105 active:scale-95'}
+                                            className={`
+                                                aspect-square rounded-xl md:rounded-2xl flex flex-col items-center justify-center transition-all duration-500 relative group
+                                                ${isCompleted
+                                                    ? 'bg-gold-rich text-white shadow-lg shadow-gold-rich/20'
+                                                    : 'bg-emerald-900/5 text-emerald-900/30'}
+                                                ${isCurrent
+                                                    ? 'ring-2 ring-gold-soft ring-offset-4 ring-offset-marfil scale-105 z-10'
+                                                    : 'hover:scale-105 active:scale-95'}
                                             `}
                                         >
-                                            <span className={`text-[10px] md:text-xs font-bold ${isCompleted ? 'opacity-100' : 'opacity-60'} mb-px`}>{d.toString().padStart(2, '0')}</span>
-                                            {isCompleted && <div className="w-1.5 h-1.5 rounded-full bg-white mt-0.5 shadow-sm animate-pulse" />}
+                                            <span className={`text-[10px] md:text-xs font-bold ${isCompleted ? 'opacity-100' : 'opacity-40'}`}>
+                                                {d.toString().padStart(2, '0')}
+                                            </span>
+                                            {isCompleted && <div className="w-1 h-1 rounded-full bg-white mt-0.5 shadow-sm opacity-60" />}
 
-                                            {/* Hover Tooltip */}
-                                            <div className="absolute -top-10 left-1/2 -translate-x-1/2 px-3 py-1 bg-emerald-950 text-white text-[9px] md:text-[10px] font-bold rounded-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-20 border border-gold-soft/20 uppercase tracking-widest">
-                                                Day {d} {isCompleted ? '• Done' : ''}
+                                            {/* Minimal Tooltip for Desktop */}
+                                            <div className="absolute -top-8 left-1/2 -translate-x-1/2 px-2 py-1 bg-emerald-950 text-white text-[8px] font-bold rounded-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-20 uppercase tracking-[0.2em]">
+                                                Day {d}
                                             </div>
                                         </button>
                                     );
