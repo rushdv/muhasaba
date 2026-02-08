@@ -30,6 +30,12 @@
     @apply bg-white/80 backdrop-blur-md border border-emerald-100 shadow-xl rounded-2xl;
   }
 
+  .planner-card {
+    @apply bg-white border border-emerald-100 rounded-2xl shadow-sm transition-all hover:shadow-lg;
+    background-image: radial-gradient(#e5e7eb 0.5px, transparent 0.5px);
+    background-size: 20px 20px;
+  }
+
   .islamic-input {
     @apply bg-white/50 border border-emerald-200 p-3 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none transition-all;
   }

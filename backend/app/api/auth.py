@@ -1,8 +1,8 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from app.models.user import User
-from app.schemas.user import UserCreate, Token
-from app.auth.security import hash_password
+from app.schemas.user import UserCreate, Token, UserLogin
+from app.auth.security import hash_password, verify_password
 from app.auth.jwt import create_access_token
 from app.auth.deps import get_db
 
@@ -26,4 +26,19 @@ def signup(user_in: UserCreate, db: Session = Depends(get_db)):
     db.commit()
 
     token = create_access_token({"sub": new_user.email})
+    return {"access_token": token, "token_type": "bearer"}
+
+@router.post("/login", response_model=Token)
+def login(user_in: UserLogin, db: Session = Depends(get_db)):
+    # এখানে UserCreate স্কিমা ব্যবহার করা হয়েছে কারণ এতে email এবং password আছে।
+    # আপনি চাইলে আলাদা Login স্কিমাও তৈরি করতে পারেন।
+    user = db.query(User).filter(User.email == user_in.email).first()
+    if not user or not verify_password(user_in.password, user.hashed_password):
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Incorrect email or password",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+
+    token = create_access_token({"sub": user.email})
     return {"access_token": token, "token_type": "bearer"}
