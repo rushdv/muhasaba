@@ -7,10 +7,10 @@ from app.api import ramadan
 
 app = FastAPI(title="Muhasaba API")
 
-# CORS কনফিগারেশন
+# CORS configuration
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"], # আপাতত ডেমোর জন্য সব এলাউ করা হয়েছে, প্রোডাকশনে স্পেসিফিক ইউআরএল দিতে হবে
+    allow_origins=["*"], # All origins allowed for development. In production, specify exact URLs.
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
