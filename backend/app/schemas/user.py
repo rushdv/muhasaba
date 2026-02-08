@@ -1,7 +1,7 @@
 from pydantic import BaseModel, EmailStr
 from typing import Optional
 
-# ইউজার রেজিস্ট্রেশনের সময় যা যা পাঠাবে
+# Data sent during user registration
 class UserCreate(BaseModel):
     username: str
     email: EmailStr
@@ -11,7 +11,7 @@ class UserLogin(BaseModel):
     email: EmailStr
     password: str
 
-# এপিআই রেসপন্স হিসেবে ইউজারকে যা যা দেখাবো (পাসওয়ার্ড ছাড়া)
+# User details shown in API response (excluding password)
 class UserResponse(BaseModel):
     id: int
     username: str
@@ -21,11 +21,11 @@ class UserResponse(BaseModel):
     class Config:
         from_attributes = True
 
-# লগইন সফল হলে যে টোকেন দেবো
+# Token provided after successful login
 class Token(BaseModel):
     access_token: str
     token_type: str
 
-# টোকেনের ভেতরকার ডাটা (পরবর্তীতে লাগবে)
+# Data inside the token
 class TokenData(BaseModel):
     username: Optional[str] = None

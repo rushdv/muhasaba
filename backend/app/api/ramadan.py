@@ -107,5 +107,5 @@ def get_analytics(
         "total_names_memorized": names_memorized,
         "avg_spiritual_energy": round(avg_energy, 1),
         "total_sadaqah_days": sadaqah_days,
-        "highlight_text": f"অসাধারণ! আপনি {total_days} দিনের আধ্যাত্মিক সফর সম্পন্ন করেছেন।" # Bengali transition
+        "highlight_text": f"Masha'Allah! You have completed a spiritual journey of {total_days} days."
     }
