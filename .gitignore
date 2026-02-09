@@ -15,10 +15,13 @@ backend/*.db
 # =====================
 .env
 
+
 # =====================
 # Node / Frontend
 # =====================
+node_modules/
 frontend/node_modules/
+functions/node_modules/
 frontend/.next/
 frontend/out/
 frontend/build/
