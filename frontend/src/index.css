@@ -1,24 +1,33 @@
 @import "tailwindcss";
 
 @theme {
-  --color-emerald-950: #022c22;
-  --color-emerald-900: #064e3b;
-  --color-emerald-800: #065f46;
+  --color-obsidian-950: #020617;
+  /* Deepest Midnight */
+  --color-obsidian-900: #0f172a;
+  --color-indigo-spiritual: #1e1b4b;
+  /* Sacred Night Blue */
+
   --color-gold-soft: #c5a059;
   --color-gold-rich: #a37c35;
-  --color-marfil: #fdfaf3;
-  --color-parchment: #fefce8;
+  --color-gold-glow: #e2c08d;
+  --color-champagne-cool: #d4b483;
 
-  --shadow-celestial: 0 8px 32px 0 rgba(6, 78, 59, 0.08);
-  --shadow-celestial-hover: 0 8px 32px 0 rgba(197, 160, 89, 0.15);
-  --shadow-gold-glow: 0 0 10px rgba(197, 160, 89, 0.3);
-  --shadow-gold-button: 0 10px 15px -3px rgba(197, 160, 89, 0.2);
+  --color-marfil: #fdfaf3;
+  --shadow-celestial: 0 8px 32px 0 rgba(15, 23, 42, 0.08);
+  /* Indigo-tinted shadow */
+  --shadow-celestial-hover: 0 16px 64px 0 rgba(197, 160, 89, 0.15);
 }
+
+@custom-variant dark (&:where(.dark, .dark *));
 
 @layer base {
   body {
-    @apply antialiased text-emerald-950 bg-marfil;
+    @apply antialiased text-slate-900 bg-marfil transition-colors duration-1000;
     font-family: 'Inter', sans-serif;
+  }
+
+  .dark body {
+    @apply text-slate-50 bg-obsidian-950;
   }
 
   h1,
@@ -28,29 +37,108 @@
   h5,
   h6 {
     font-family: 'Playfair Display', serif;
+    @apply tracking-tight font-black;
+  }
+
+  .dark h1,
+  .dark h2,
+  .dark h3 {
+    @apply tracking-[0.02em];
+    text-shadow: 0 1px 2px rgba(30, 27, 75, 0.4);
   }
 }
 
 @layer components {
+
+  /* Masterclass Glassmorphism - Indigo Tinted for Dark */
   .celestial-card {
-    @apply bg-white/60 backdrop-blur-xl border border-white/40 shadow-celestial rounded-3xl transition-all duration-500 hover:shadow-celestial-hover;
+    @apply bg-white/70 dark:bg-obsidian-900/40 backdrop-blur-[40px] dark:backdrop-blur-[60px] border border-white/40 dark:border-white/10 shadow-celestial rounded-[2.5rem] transition-all duration-1000 hover:shadow-celestial-hover relative overflow-hidden;
+  }
+
+  /* Shimmer Border Light Effect */
+  .border-beam::after {
+    content: "";
+    @apply absolute inset-0 rounded-[inherit] border-2 border-transparent pointer-events-none;
+    background: linear-gradient(60deg, transparent 20%, var(--color-gold-soft) 50%, transparent 80%) border-box;
+    mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+    mask-composite: exclude;
+    background-size: 300% 300%;
+    animation: shimmer-beam 8s linear infinite;
+  }
+
+  .dark .border-beam::after {
+    background: linear-gradient(60deg, transparent 20%, var(--color-champagne-cool) 50%, transparent 80%) border-box;
   }
 
   .celestial-button {
-    @apply bg-emerald-900 text-marfil px-8 py-4 rounded-2xl font-bold transition-all duration-300 shadow-lg hover:bg-emerald-800 hover:shadow-emerald-900/20 active:scale-95 border border-gold-soft/20;
+    @apply bg-slate-950 dark:bg-champagne-cool text-marfil dark:text-slate-950 px-10 py-5 rounded-2xl font-black transition-all duration-700 shadow-xl hover:scale-[1.02] active:scale-95 border border-gold-soft/30 hover:shadow-indigo-900/20 dark:hover:shadow-champagne-cool/40 uppercase tracking-[0.2em] text-[11px];
   }
 
-  .gold-gradient-text {
-    @apply bg-clip-text text-transparent bg-gradient-to-r from-gold-soft via-gold-rich to-gold-soft;
+  /* Dynamic Mesh Background - Sacred Night Palette */
+  .mesh-gradient {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    background: radial-gradient(circle at 50% 50%, #fdfaf3, #f7f2e5);
+    background-size: 200% 200%;
+    animation: mesh-move 20s ease infinite;
+  }
+
+  .dark .mesh-gradient {
+    background: radial-gradient(circle at 10% 10%, #0f172a 0%, #020617 40%, #010409 100%);
+    opacity: 1 !important;
+  }
+
+  .celestial-pattern {
+    mask-image: radial-gradient(circle, black, transparent 80%);
   }
 
   .islamic-input-modern {
-    @apply bg-white/40 border border-emerald-100 p-4 rounded-2xl focus:ring-2 focus:ring-gold-soft/30 focus:border-gold-soft outline-none transition-all duration-300;
+    @apply bg-white/5 dark:bg-obsidian-950/20 backdrop-blur-md border border-gold-soft/10 rounded-2xl px-12 py-4 text-slate-900 dark:text-marfil placeholder:text-slate-900/40 dark:placeholder:text-marfil/30 outline-none transition-all duration-300;
+  }
+
+  .islamic-input-modern:focus {
+    @apply border-gold-soft/40 ring-4 ring-gold-soft/5;
+    box-shadow: inset 0 0 15px rgba(197, 160, 89, 0.05);
   }
 }
 
-.celestial-pattern {
-  background-image:
-    radial-gradient(circle at 2px 2px, rgba(163, 124, 53, 0.05) 1px, transparent 0);
-  background-size: 40px 40px;
+/* Scrollbar Refinement */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-slate-900/10 dark:bg-champagne-cool/20 rounded-full;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-gold-soft/40 dark:bg-champagne-cool/40;
+}
+
+/* --- DIVINE ATTRIBUTES HERO STYLES (SACRED NIGHT) --- */
+.divine-card-container {
+  @apply relative overflow-hidden rounded-[2.5rem] transition-all duration-1000;
+}
+
+.divine-gold-card {
+  @apply bg-slate-950 text-marfil border border-gold-soft/30 shadow-2xl;
+}
+
+.dark .divine-gold-card {
+  @apply bg-obsidian-900/40 backdrop-blur-[60px] border border-champagne-cool/30;
+  box-shadow: 0 0 60px rgba(163, 124, 53, 0.2), inset 0 0 40px rgba(211, 180, 131, 0.05) !important;
+}
+
+.geometric-pattern {
+  @apply absolute inset-0 opacity-[0.03] dark:opacity-[0.08] pointer-events-none;
+  background-image: url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M40 0l12 28 28 12-28 12-12 28-12-28-28-12 28-12z' fill='%23d4b483' fill-opacity='1'/%3E%3C/svg%3E");
+  background-size: 100px 100px;
 }
