@@ -77,4 +77,7 @@ Create `.env` files in both `frontend/` and `backend/` as per the `.env.example`
 ## 🔒 Authentication
 The project uses **JWT-based authentication** and supports **Google OAuth 2.0** for a seamless sign-in experience.
 
- 
+---
+
+## 📜 License
+This project is licensed under the [MIT License](LICENSE).
