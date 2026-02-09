@@ -5,7 +5,7 @@ from app.api import muhasaba
 from app.api import ramadan
 
 
-app = FastAPI(title="Muhasaba API")
+app = FastAPI(title="Muhasabah API")
 
 # CORS configuration
 app.add_middleware(
