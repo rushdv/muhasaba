@@ -7,6 +7,7 @@ import {
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { getRamadanContent, upsertRamadanReport, getRamadanHistory } from '../api/ramadan';
+import ThemeToggle from '../components/ThemeToggle';
 
 const RamadanPlanner = () => {
     const navigate = useNavigate();
@@ -86,18 +87,18 @@ const RamadanPlanner = () => {
     const toggleField = (field) => setReport(prev => ({ ...prev, [field]: !prev[field] }));
 
     if (loading) return (
-        <div className="min-h-screen bg-marfil flex items-center justify-center">
+        <div className="min-h-screen bg-transparent flex items-center justify-center">
             <div className="w-16 h-16 border-4 border-gold-soft border-t-transparent rounded-full animate-spin" />
         </div>
     );
 
     return (
-        <div className="min-h-screen bg-marfil celestial-pattern font-sans pb-24 text-emerald-950">
+        <div className="min-h-screen bg-transparent font-sans pb-24 text-slate-950 dark:text-slate-50 transition-colors duration-1000">
             {/* Header / Nav */}
-            <header className="sticky top-0 z-50 bg-marfil/80 backdrop-blur-2xl border-b border-gold-soft/10 px-6 md:px-8 py-4 md:py-5">
+            <header className="sticky top-0 z-50 bg-white/20 dark:bg-obsidian-950/20 backdrop-blur-[40px] border-b border-gold-soft/10 px-6 md:px-8 py-4 md:py-5">
                 <div className="max-w-7xl mx-auto flex justify-between items-center">
-                    <button onClick={() => navigate('/dashboard')} className="group flex items-center gap-3 text-emerald-900 font-bold">
-                        <div className="p-2 transition-transform group-hover:-translate-x-1 bg-white rounded-xl shadow-sm border border-gold-soft/20">
+                    <button onClick={() => navigate('/dashboard')} className="group flex items-center gap-3 text-slate-900 dark:text-slate-50 font-bold">
+                        <div className="p-2 transition-transform group-hover:-translate-x-1 bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gold-soft/20">
                             <ArrowLeft size={18} />
                         </div>
                         <span className="hidden md:inline uppercase tracking-widest text-[10px] text-gold-rich">Back to Hub</span>
@@ -107,7 +108,7 @@ const RamadanPlanner = () => {
                         <button onClick={() => setDay(d => Math.max(1, d - 1))} className="p-1 md:p-2 hover:bg-gold-soft/10 rounded-xl transition-colors">
                             <ChevronLeft size={20} className="text-gold-rich md:w-6" />
                         </button>
-                        <div className="px-4 md:px-8 py-1.5 md:py-2 bg-emerald-950 text-white rounded-xl md:rounded-2xl shadow-xl flex flex-col items-center border border-gold-soft/20 min-w-[100px] md:min-w-[140px]">
+                        <div className="px-4 md:px-8 py-1.5 md:py-2 bg-slate-950 dark:bg-obsidian-900 text-white rounded-xl md:rounded-2xl shadow-xl flex flex-col items-center border border-gold-soft/20 min-w-[100px] md:min-w-[140px]">
                             <span className="text-[7px] md:text-[10px] uppercase font-bold tracking-[0.2em] md:tracking-[0.3em] text-gold-soft mb-0.5 md:mb-1">Ramadan Journey</span>
                             <h1 className="text-sm md:text-2xl font-serif font-bold italic tracking-wider leading-none">Day {day.toString().padStart(2, '0')}</h1>
                         </div>
@@ -116,20 +117,23 @@ const RamadanPlanner = () => {
                         </button>
                     </div>
 
-                    <button
-                        onClick={handleSave}
-                        disabled={saving}
-                        className="celestial-button flex items-center gap-3 group px-6 md:px-8 py-3 md:py-4 transition-all hover:scale-[1.02] border-gold-soft/30"
-                    >
-                        {saving ? (
-                            <div className="w-5 h-5 border-2 border-marfil border-t-transparent rounded-full animate-spin" />
-                        ) : (
-                            <>
-                                <Save size={18} className="transition-transform group-hover:scale-110" />
-                                <span className="hidden sm:inline uppercase tracking-widest text-[11px]">Save Effort</span>
-                            </>
-                        )}
-                    </button>
+                    <div className="flex items-center gap-4">
+                        <ThemeToggle />
+                        <button
+                            onClick={handleSave}
+                            disabled={saving}
+                            className="celestial-button flex items-center gap-3 group px-6 md:px-8 py-3 md:py-4 transition-all hover:scale-[1.02] border-gold-soft/30"
+                        >
+                            {saving ? (
+                                <div className="w-5 h-5 border-2 border-marfil border-t-transparent rounded-full animate-spin" />
+                            ) : (
+                                <>
+                                    <Save size={18} className="transition-transform group-hover:scale-110" />
+                                    <span className="hidden sm:inline uppercase tracking-widest text-[11px]">Save Effort</span>
+                                </>
+                            )}
+                        </button>
+                    </div>
                 </div>
             </header>
 
@@ -138,7 +142,7 @@ const RamadanPlanner = () => {
                 {/* LEFT COLUMN: Spiritual Content */}
                 <aside className="lg:col-span-4 space-y-8">
                     {/* Daily Ayat */}
-                    <section className="celestial-card p-8 md:p-10 relative overflow-hidden group">
+                    <section className="celestial-card border-beam p-8 md:p-10 relative overflow-hidden group">
                         <div className="absolute -top-10 -right-10 opacity-[0.03] transition-transform duration-1000 group-hover:rotate-12">
                             <Compass size={280} />
                         </div>
@@ -149,34 +153,34 @@ const RamadanPlanner = () => {
                             <h2 className="text-xs uppercase font-bold tracking-widest text-gold-rich">Verse of the Day</h2>
                         </header>
                         <div className="space-y-6 relative z-10">
-                            <p className="text-2xl md:text-3xl font-serif leading-relaxed text-right text-emerald-900/90" dir="rtl">
+                            <p className="text-2xl md:text-3xl font-serif leading-relaxed text-right text-slate-900/90 dark:text-slate-50/90" dir="rtl">
                                 {content?.ayat?.arabic}
                             </p>
                             {content?.ayat?.meaning && (
-                                <p className="text-sm italic leading-relaxed text-emerald-800 font-medium">
+                                <p className="text-sm italic leading-relaxed text-slate-800 dark:text-slate-200 font-medium">
                                     "{content?.ayat?.meaning}"
                                 </p>
                             )}
                         </div>
                     </section>
 
-                    {/* Al-Asmaul Husna */}
-                    <section className="celestial-card p-0 overflow-hidden bg-emerald-950 text-marfil border-none">
-                        <header className="p-8 border-b border-white/5 flex items-center justify-between">
-                            <h2 className="text-marfil text-[10px] uppercase font-bold tracking-[0.4em]">Divine Attributes</h2>
-                            <Sparkles size={16} className="text-gold-soft" />
+                    {/* Al-Asmaul Husna - Elevated Hero Section */}
+                    <section className="divine-card-container divine-gold-card border-beam p-0 overflow-hidden text-marfil shadow-2xl group">
+                        <header className="p-8 border-b border-white/5 flex items-center justify-between relative z-10">
+                            <h2 className="text-marfil text-[10px] uppercase font-bold tracking-[0.5em] opacity-80 group-hover:opacity-100 transition-opacity">Divine Attributes</h2>
+                            <Sparkles size={18} className="text-gold-soft animate-pulse" />
                         </header>
-                        <div className="p-8 space-y-8">
+                        <div className="p-8 space-y-6 relative z-10">
                             {content?.names?.map((name, i) => (
-                                <div key={i} className="flex items-center justify-between group">
-                                    <div className="w-12 h-12 rounded-2xl bg-white/5 flex items-center justify-center text-gold-soft font-serif text-lg">
+                                <div key={i} className="divine-attribute-item flex items-center justify-between p-4 rounded-2xl">
+                                    <div className="w-12 h-12 rounded-2xl bg-white/5 border border-white/5 flex items-center justify-center text-gold-soft font-serif text-lg shadow-inner">
                                         {i + 1}
                                     </div>
                                     <div className="flex-1 px-6">
-                                        <p className="text-sm font-bold text-emerald-100 mb-0.5">{name.meaning}</p>
-                                        <p className="text-[10px] uppercase tracking-widest opacity-40 font-bold">{name.pronunciation}</p>
+                                        <p className="text-sm font-bold text-slate-50 dark:text-champagne-cool mb-0.5 tracking-wide">{name.meaning}</p>
+                                        <p className="text-[10px] uppercase tracking-[0.2em] opacity-40 font-bold">{name.pronunciation}</p>
                                     </div>
-                                    <p className="text-2xl font-serif text-gold-soft group-hover:scale-110 transition-transform duration-500" dir="rtl">
+                                    <p className="text-3xl font-serif text-gold-soft dark:text-gold-glow drop-shadow-gold transition-all duration-700 hover:scale-110" dir="rtl">
                                         {name.arabic}
                                     </p>
                                 </div>
@@ -185,22 +189,22 @@ const RamadanPlanner = () => {
                     </section>
 
                     {/* Hadith Section */}
-                    <section className="celestial-card p-8 bg-gold-soft/5 border-gold-soft/20">
+                    <section className="celestial-card p-8 bg-gold-soft/5 dark:bg-gold-soft/10 border-gold-soft/20">
                         <header className="flex items-center gap-3 mb-6">
-                            <div className="w-10 h-10 rounded-full bg-emerald-950/10 flex items-center justify-center text-emerald-900">
+                            <div className="w-10 h-10 rounded-full bg-slate-950/10 dark:bg-slate-50/10 flex items-center justify-center text-slate-900 dark:text-slate-50">
                                 <Smile size={20} />
                             </div>
-                            <h2 className="text-xs uppercase font-bold tracking-widest text-emerald-900/60">Prophetic Tradition</h2>
+                            <h2 className="text-xs uppercase font-bold tracking-widest text-slate-900/60 dark:text-slate-50/60">Prophetic Tradition</h2>
                         </header>
                         {content?.hadith && (
-                            <p className="text-sm text-emerald-900 font-medium italic leading-relaxed">
+                            <p className="text-sm text-emerald-900 dark:text-emerald-50 font-medium italic leading-relaxed">
                                 "{content?.hadith}"
                             </p>
                         )}
                     </section>
 
                     {/* Sacred Dua Section */}
-                    <section className="celestial-card p-8 bg-white border-gold-soft/10">
+                    <section className="celestial-card p-8 bg-white dark:bg-obsidian-900/40 border-gold-soft/10">
                         <header className="flex items-center gap-3 mb-6">
                             <div className="w-10 h-10 rounded-full bg-gold-soft/10 flex items-center justify-center text-gold-rich">
                                 <Star size={20} />
@@ -210,12 +214,12 @@ const RamadanPlanner = () => {
                         {(content?.dua?.arabic || content?.dua?.meaning) && (
                             <div className="space-y-4">
                                 {content?.dua?.arabic && (
-                                    <p className="text-xl md:text-2xl font-serif text-right text-emerald-900" dir="rtl">
+                                    <p className="text-xl md:text-2xl font-serif text-right text-slate-900 dark:text-slate-50" dir="rtl">
                                         {content?.dua?.arabic}
                                     </p>
                                 )}
                                 {content?.dua?.meaning && (
-                                    <p className="text-sm italic font-medium text-emerald-800 leading-relaxed border-l-2 border-gold-soft/30 pl-4">
+                                    <p className="text-sm italic font-medium text-slate-800 dark:text-slate-200 leading-relaxed border-l-2 border-gold-soft/30 pl-4">
                                         {content?.dua?.meaning}
                                     </p>
                                 )}
@@ -229,24 +233,24 @@ const RamadanPlanner = () => {
 
                     {/* TOP STATS: Quick glance */}
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                        <article className="celestial-card p-8 flex items-center gap-6">
-                            <div className={`w-16 h-16 rounded-2xl flex items-center justify-center transition-all duration-500 ${report.is_fasting ? 'bg-emerald-900 text-gold-soft shadow-lg' : 'bg-emerald-50 text-emerald-300'}`}>
+                        <article className="celestial-card border-beam p-8 flex items-center gap-6">
+                            <div className={`w-16 h-16 rounded-2xl flex items-center justify-center transition-all duration-500 ${report.is_fasting ? 'bg-slate-950 dark:bg-gold-soft text-gold-soft dark:text-slate-950 shadow-lg' : 'bg-slate-50 dark:bg-slate-800/20 text-slate-300 dark:text-slate-100/20'}`}>
                                 <Zap size={32} />
                             </div>
                             <div>
                                 <h3 className="text-xs uppercase font-bold tracking-widest text-gold-rich mb-2">Fasting Status</h3>
                                 <button
                                     onClick={() => toggleField('is_fasting')}
-                                    className={`px-6 py-2 rounded-xl text-xs font-bold transition-all ${report.is_fasting ? 'bg-gold-soft text-white shadow-md' : 'bg-emerald-50 text-emerald-800 hover:bg-emerald-100'}`}
+                                    className={`px-6 py-2 rounded-xl text-xs font-bold transition-all ${report.is_fasting ? 'bg-gold-soft text-white shadow-md' : 'bg-slate-50 dark:bg-slate-800/40 text-slate-800 dark:text-slate-100 hover:bg-slate-100 dark:hover:bg-slate-800/60'}`}
                                 >
                                     {report.is_fasting ? 'Currently Fasting' : 'Mark as Fasting'}
                                 </button>
                             </div>
                         </article>
 
-                        <article className="celestial-card p-8 flex items-center gap-6">
-                            <div className="w-16 h-16 rounded-2xl bg-amber-50 flex items-center justify-center text-gold-rich">
-                                <Heart size={32} fill="currentColor" opacity={0.1} />
+                        <article className="celestial-card border-beam p-8 flex items-center gap-6">
+                            <div className="w-16 h-16 rounded-2xl bg-amber-50 dark:bg-gold-soft/10 flex items-center justify-center text-gold-soft dark:text-gold-glow shadow-sm dark:shadow-gold-glow">
+                                <Heart size={32} fill="currentColor" className="opacity-80 dark:opacity-100" />
                             </div>
                             <div>
                                 <h3 className="text-xs uppercase font-bold tracking-widest text-gold-rich mb-2">Spiritual Energy</h3>
@@ -255,7 +259,7 @@ const RamadanPlanner = () => {
                                         <div
                                             key={lvl}
                                             onClick={() => setReport({ ...report, spiritual_energy: lvl })}
-                                            className={`w-4 h-10 rounded-full cursor-pointer transition-all ${lvl <= report.spiritual_energy ? 'bg-gold-soft shadow-gold-glow' : 'bg-gold-soft/10'}`}
+                                            className={`w-4 h-10 rounded-full cursor-pointer transition-all ${lvl <= report.spiritual_energy ? 'bg-gold-soft shadow-gold-glow' : 'bg-gold-soft/10 dark:bg-gold-soft/20'}`}
                                         />
                                     ))}
                                 </div>
@@ -273,7 +277,7 @@ const RamadanPlanner = () => {
                                     <Target size={20} className="text-gold-rich" />
                                     <span>Salat Tracker</span>
                                 </h2>
-                                <div className="flex gap-4 text-[9px] font-bold uppercase tracking-widest text-emerald-400">
+                                <div className="flex gap-4 text-[9px] font-bold uppercase tracking-widest text-slate-400 dark:text-slate-200">
                                     <span>Fardh</span>
                                     <span>Sunnah</span>
                                 </div>
@@ -291,13 +295,14 @@ const RamadanPlanner = () => {
                                     { id: 'tahiyatul_masjid', label: 'Tahiyatul Masjid', voluntary: true },
                                     { id: 'tahiyatul_wudu', label: 'Tahiyatul Wudu', voluntary: true }
                                 ].map((p) => (
-                                    <div key={p.id} className="flex items-center justify-between p-2 rounded-xl hover:bg-gold-soft/5 transition-colors">
-                                        <span className="text-sm font-semibold tracking-wide text-emerald-900/80">{p.label}</span>
+                                    <div key={p.id} className="flex items-center justify-between p-2 rounded-xl hover:bg-gold-soft/5 dark:hover:bg-gold-soft/10 transition-colors">
+                                        <span className="text-sm font-semibold tracking-wide text-slate-900/80 dark:text-slate-50/80">{p.label}</span>
                                         <div className="flex gap-12">
                                             {!p.voluntary ? (
                                                 <MinimalCheckbox
                                                     active={report[p.id]}
                                                     onClick={() => toggleField(p.id)}
+                                                    importance="fardh"
                                                 />
                                             ) : <div className="w-6 h-6" />}
 
@@ -305,13 +310,13 @@ const RamadanPlanner = () => {
                                                 <MinimalCheckbox
                                                     active={report[p.id.replace('salah_', 'sunnat_')]}
                                                     onClick={() => toggleField(p.id.replace('salah_', 'sunnat_'))}
-                                                    color="gold"
+                                                    importance="sunnah"
                                                 />
                                             ) : p.voluntary ? (
                                                 <MinimalCheckbox
                                                     active={report[p.id]}
                                                     onClick={() => toggleField(p.id)}
-                                                    color="gold"
+                                                    importance="sunnah"
                                                 />
                                             ) : <div className="w-6 h-6" />}
                                         </div>
@@ -334,7 +339,7 @@ const RamadanPlanner = () => {
                                     <LegacyInput label="Ayat" value={report.quran_ayat} onChange={v => setReport({ ...report, quran_ayat: v })} />
                                 </div>
                                 <textarea
-                                    className="w-full bg-emerald-50/50 border border-gold-soft/10 rounded-2xl p-4 text-sm outline-none focus:ring-2 focus:ring-gold-soft/20 resize-none h-24 placeholder:text-emerald-300 font-medium"
+                                    className="w-full bg-slate-50/50 dark:bg-slate-800/20 border border-gold-soft/10 rounded-2xl p-4 text-sm outline-none focus:ring-2 focus:ring-gold-soft/20 resize-none h-24 placeholder:text-slate-300 dark:placeholder:text-slate-100/30 font-medium text-slate-950 dark:text-slate-50"
                                     placeholder="Brief reflection on today's recitation..."
                                     value={report.quran_progress || ""}
                                     onChange={e => setReport({ ...report, quran_progress: e.target.value })}
@@ -366,7 +371,7 @@ const RamadanPlanner = () => {
                                             >
                                                 {report[item.id] && <Check size={12} strokeWidth={4} />}
                                             </div>
-                                            <span className={`text-sm font-medium transition-colors ${report[item.id] ? 'text-emerald-900' : 'text-emerald-700/60'}`}>
+                                            <span className={`text-sm font-medium transition-colors ${report[item.id] ? 'text-slate-900 dark:text-slate-50' : 'text-slate-700/60 dark:text-slate-100/40'}`}>
                                                 {item.label}
                                             </span>
                                         </label>
@@ -377,18 +382,18 @@ const RamadanPlanner = () => {
                     </div>
 
                     {/* Reflection Box */}
-                    <section className="celestial-card p-8 md:p-10 bg-gradient-to-br from-white to-gold-soft/5 border-gold-soft/10">
+                    <section className="celestial-card p-8 md:p-10 bg-gradient-to-br from-white dark:from-obsidian-900/40 to-gold-soft/5 dark:to-gold-soft/10 border-gold-soft/10">
                         <header className="flex items-center justify-between mb-8">
                             <h2 className="font-serif text-2xl font-bold italic tracking-tight flex items-center gap-3">
                                 <MessageSquare size={24} className="text-gold-rich" />
                                 <span>Soul’s Reflection</span>
                             </h2>
-                            <div className="px-4 py-1.5 rounded-full bg-gold-soft/10 text-gold-rich text-[10px] font-bold uppercase tracking-widest">
+                            <div className="px-4 py-1.5 rounded-full bg-gold-soft/10 dark:bg-gold-soft/20 text-gold-rich text-[10px] font-bold uppercase tracking-widest">
                                 Private Note
                             </div>
                         </header>
                         <textarea
-                            className="w-full h-40 bg-transparent border-none p-0 text-lg text-emerald-900 focus:ring-0 outline-none resize-none placeholder:text-emerald-900/20 font-serif italic italic leading-relaxed"
+                            className="w-full h-40 bg-transparent border-none p-0 text-lg text-slate-900 dark:text-slate-50 focus:ring-0 outline-none resize-none placeholder:text-slate-900/20 dark:placeholder:text-slate-100/20 font-serif italic leading-relaxed"
                             placeholder="What did your heart experience today? Any victories or areas for growth?"
                             value={report.reflection_note || ""}
                             onChange={e => setReport({ ...report, reflection_note: e.target.value })}
@@ -400,13 +405,13 @@ const RamadanPlanner = () => {
                         <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-gold-soft/30 to-transparent" />
                         <header className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12">
                             <div>
-                                <h2 className="font-serif text-2xl font-bold italic text-emerald-950 mb-1">30 Days Journey</h2>
+                                <h2 className="font-serif text-2xl font-bold italic text-slate-950 dark:text-slate-50 mb-1">30 Days Journey</h2>
                                 <p className="text-[10px] uppercase font-bold tracking-[0.3em] text-gold-rich opacity-60">Digital Spiritual Timeline</p>
                             </div>
                             <div className="flex items-center gap-4 text-[9px] font-bold uppercase tracking-widest">
                                 <div className="w-2.5 h-2.5 rounded-full bg-gold-rich shadow-[0_0_8px_rgba(163,124,53,0.4)]" />
                                 <span>Completed</span>
-                                <div className="w-2.5 h-2.5 rounded-full bg-emerald-900/5" />
+                                <div className="w-2.5 h-2.5 rounded-full bg-slate-900/5 dark:bg-slate-100/5" />
                                 <span className="opacity-40">Pending</span>
                             </div>
                         </header>
@@ -424,9 +429,9 @@ const RamadanPlanner = () => {
                                                 aspect-square rounded-xl md:rounded-2xl flex flex-col items-center justify-center transition-all duration-500 relative group
                                                 ${isCompleted
                                                     ? 'bg-gold-rich text-white shadow-lg shadow-gold-rich/20'
-                                                    : 'bg-emerald-900/5 text-emerald-900/30'}
+                                                    : 'bg-slate-900/5 dark:bg-slate-100/5 text-slate-900/30 dark:text-slate-100/30'}
                                                 ${isCurrent
-                                                    ? 'ring-2 ring-gold-soft ring-offset-4 ring-offset-marfil scale-105 z-10'
+                                                    ? 'ring-2 ring-gold-soft ring-offset-4 dark:ring-offset-emerald-950 ring-offset-marfil scale-105 z-10'
                                                     : 'hover:scale-105 active:scale-95'}
                                             `}
                                         >
@@ -452,25 +457,27 @@ const RamadanPlanner = () => {
 };
 
 // UI ATOMS
-const MinimalCheckbox = ({ active, onClick, color = 'emerald' }) => (
+const MinimalCheckbox = ({ active, onClick, importance = 'fardh' }) => (
     <button
         onClick={onClick}
         className={`w-6 h-6 rounded-xl border-2 transition-all duration-300 flex items-center justify-center ${active
-            ? (color === 'emerald' ? 'bg-emerald-900 border-emerald-900 text-marfil' : 'bg-gold-soft border-gold-soft text-marfil shadow-lg shadow-gold-button')
-            : 'border-gold-soft/10 bg-white hover:border-gold-soft/30'}`}
+            ? (importance === 'fardh'
+                ? 'bg-gold-rich border-gold-rich text-white shadow-[0_0_15px_rgba(163,124,53,0.4)] scale-110'
+                : 'bg-gold-soft/10 border-gold-soft/30 text-gold-rich')
+            : 'border-gold-soft/10 bg-white/5 dark:bg-slate-800/20 hover:border-gold-soft/30'}`}
     >
-        {active && <Check size={14} strokeWidth={3} />}
+        {active && <Check size={14} strokeWidth={4} />}
     </button>
 );
 
 const LegacyInput = ({ label, value, onChange }) => (
     <div className="space-y-2">
-        <label className="text-[10px] uppercase font-bold tracking-[0.2em] text-emerald-900/40 ml-1">{label}</label>
+        <label className="text-[10px] uppercase font-bold tracking-[0.2em] text-slate-900/40 dark:text-slate-100/40 ml-1">{label}</label>
         <input
             type="number"
             value={value || ""}
             onChange={e => onChange(e.target.value)}
-            className="w-full bg-white border border-gold-soft/10 p-3 md:p-4 rounded-xl md:rounded-2xl text-center text-lg font-serif font-bold focus:ring-2 focus:ring-gold-soft/20 outline-none transition-all placeholder:text-gold-soft/10"
+            className="w-full bg-white dark:bg-slate-800/40 border border-gold-soft/10 p-3 md:p-4 rounded-xl md:rounded-2xl text-center text-lg font-serif font-bold focus:ring-2 focus:ring-gold-soft/20 outline-none transition-all placeholder:text-gold-soft/10 text-slate-950 dark:text-slate-50"
             placeholder="—"
         />
     </div>

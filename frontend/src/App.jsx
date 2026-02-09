@@ -1,17 +1,18 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
-import RamadanPlanner from './pages/RamadanPlanner'; 
+import RamadanPlanner from './pages/RamadanPlanner';
 import RamadanWrapped from './pages/RamadanWrapped';
 import ProtectedRoute from './components/ProtectedRoute';
 
 function App() {
   return (
     <Router>
+      <div className="mesh-gradient" />
       <Routes>
         <Route path="/login" element={<Login />} />
 
-        
+
         <Route
           path="/dashboard"
           element={
@@ -21,7 +22,7 @@ function App() {
           }
         />
 
-        
+
         <Route
           path="/ramadan"
           element={
