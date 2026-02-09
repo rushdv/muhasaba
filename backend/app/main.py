@@ -4,6 +4,10 @@ from app.api import auth
 from app.api import muhasaba
 from app.api import ramadan
 
+from app.db.database import Base, engine
+
+Base.metadata.create_all(bind=engine)
+
 
 app = FastAPI(title="Muhasabah API")
 
