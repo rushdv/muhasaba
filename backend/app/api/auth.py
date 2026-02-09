@@ -1,4 +1,10 @@
 from fastapi import APIRouter, Depends, HTTPException, status
+import os
+from dotenv import load_dotenv
+load_dotenv()
+import secrets
+from google.oauth2 import id_token
+from google.auth.transport import requests
 from sqlalchemy.orm import Session
 from app.models.user import User
 from app.schemas.user import UserCreate, Token, UserLogin
@@ -59,11 +65,62 @@ def google_auth_info():
 
 
 @router.post("/google")
-async def google_auth_callback(data: GoogleAuthRequest):
-    # This is a placeholder for actual Google token verification
-    # logic using google-auth-library
-    return {
-        "access_token": "placeholder_google_token",
-        "token_type": "bearer",
-        "message": "Google authentication successful (Placeholder)"
-    }
+async def google_auth_callback(data: GoogleAuthRequest, db: Session = Depends(get_db)):
+    try:
+        # Verify the token
+        google_client_id = os.getenv("GOOGLE_CLIENT_ID")
+        # Verify the token
+        google_client_id = os.getenv("GOOGLE_CLIENT_ID")
+        
+        if not google_client_id:
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail="Google Client ID not configured"
+            )
+
+        id_info = id_token.verify_oauth2_token(
+            data.token, 
+            requests.Request(), 
+            google_client_id,
+            clock_skew_in_seconds=10
+        )
+
+        email = id_info.get("email")
+        name = id_info.get("name")
+        
+        if not email:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Invalid Google token: email not found"
+            )
+
+        # Check if user exists
+        user = db.query(User).filter(User.email == email).first()
+
+        if not user:
+            # Create new user
+            random_password = secrets.token_urlsafe(16)
+            new_user = User(
+                username=name or email.split("@")[0],
+                email=email,
+                hashed_password=hash_password(random_password)
+            )
+            db.add(new_user)
+            db.commit()
+            db.refresh(new_user)
+            user = new_user
+
+        # Generate JWT token
+        token = create_access_token({"sub": user.email})
+        return {"access_token": token, "token_type": "bearer"}
+
+    except ValueError as e:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail=f"Invalid Google token: {str(e)}"
+        )
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Google authentication failed: {str(e)}"
+        )
