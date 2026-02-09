@@ -75,7 +75,7 @@ const Dashboard = () => {
                         <Moon size={20} className="text-gold-soft" fill="currentColor" />
                     </div>
                     <div>
-                        <h1 className="text-lg md:text-2xl font-serif font-bold italic tracking-tight">Muhasaba</h1>
+                        <h1 className="text-lg md:text-2xl font-serif font-bold italic tracking-tight">Muhasabah</h1>
                     </div>
                 </div>
                 <button
