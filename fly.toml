@@ -1,0 +1,6 @@
+app = "muhasabah"
+primary_region = "sin"
+
+[http_service]
+  internal_port = 8080
+  force_https = true

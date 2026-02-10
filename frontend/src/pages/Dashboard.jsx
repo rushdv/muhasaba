@@ -103,15 +103,15 @@ const Dashboard = () => {
                         <div
                             key={i}
                             onClick={() => !m.disabled && navigate(m.path)}
-                            className={`celestial-card border-beam p-1 relative overflow-hidden group h-[320px] md:h-[400px] ${m.disabled ? 'cursor-not-allowed grayscale-[0.4]' : 'cursor-pointer hover:border-gold-soft/40 dark:hover:border-gold-soft/40 transition-colors duration-500'}`}
+                            className={`celestial-card border-beam p-1 relative overflow-hidden group h-[240px] md:h-[400px] ${m.disabled ? 'cursor-not-allowed grayscale-[0.4]' : 'cursor-pointer hover:border-gold-soft/40 dark:hover:border-gold-soft/40 transition-colors duration-500'}`}
                         >
-                            <div className={`w-full h-full p-6 md:p-10 rounded-[20px] md:rounded-[28px] transition-all duration-700 flex flex-col justify-between ${m.color} ${m.border || 'border-transparent'} border-2 ${m.color.includes('bg-slate-950') ? 'text-marfil' : 'text-slate-950 dark:text-slate-100'}`}>
-                                <div className="space-y-4 md:space-y-6">
-                                    <div className={`w-12 h-12 md:w-16 md:h-16 rounded-xl md:rounded-2xl flex items-center justify-center transition-transform duration-700 group-hover:scale-110 group-hover:rotate-6 ${m.color.includes('bg-slate-950') ? 'bg-white/10' : 'bg-slate-50 dark:bg-slate-800/10'}`}>
-                                        <div className={m.textColor}>{m.icon}</div>
+                            <div className={`w-full h-full p-4 md:p-10 rounded-[18px] md:rounded-[28px] transition-all duration-700 flex flex-col justify-between ${m.color} ${m.border || 'border-transparent'} border-2 ${m.color.includes('bg-slate-950') ? 'text-marfil' : 'text-slate-950 dark:text-slate-100'}`}>
+                                <div className="space-y-3 md:space-y-6">
+                                    <div className={`w-10 h-10 md:w-16 md:h-16 rounded-lg md:rounded-2xl flex items-center justify-center transition-transform duration-700 group-hover:scale-110 group-hover:rotate-6 ${m.color.includes('bg-slate-950') ? 'bg-white/10' : 'bg-slate-50 dark:bg-slate-800/10'}`}>
+                                        <div className={m.textColor}>{React.cloneElement(m.icon, { size: window.innerWidth < 768 ? 20 : 32 })}</div>
                                     </div>
-                                    <h3 className="text-2xl md:text-3xl font-serif font-bold italic leading-tight">{m.title}</h3>
-                                    <p className={`leading-relaxed ${m.color.includes('bg-slate-950') ? 'text-xs md:text-sm opacity-60 font-medium' : 'text-slate-900/40 dark:text-slate-100/40 font-bold uppercase tracking-widest text-[9px] md:text-[11px]'}`}>
+                                    <h3 className="text-xl md:text-3xl font-serif font-bold italic leading-tight">{m.title}</h3>
+                                    <p className={`leading-relaxed line-clamp-2 md:line-clamp-none ${m.color.includes('bg-slate-950') ? 'text-[10px] md:text-sm opacity-60 font-medium' : 'text-slate-900/40 dark:text-slate-100/40 font-bold uppercase tracking-widest text-[8px] md:text-[11px]'}`}>
                                         {m.desc}
                                     </p>
                                 </div>

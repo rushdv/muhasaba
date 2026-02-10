@@ -66,7 +66,7 @@ const RamadanWrapped = () => {
                     <WrappedCard
                         icon={<Activity size={24} />}
                         title="Prayer Rate"
-                        value={`${data?.salah_consistency_percentage}%`}
+                        value={`${data?.salah_consistency_percentage || 0}%`}
                         subtitle="Spiritual alignment"
                         accent="indigo"
                     />

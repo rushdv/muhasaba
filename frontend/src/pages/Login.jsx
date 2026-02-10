@@ -1,8 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Moon, Shield, User, Mail, Lock, ArrowRight } from "lucide-react";
-import { GoogleLogin } from "@react-oauth/google";
-import axios from "axios";
+import { Moon, Shield, User, Mail, Lock, ArrowRight, Eye, EyeOff } from "lucide-react";
 import { login, signup } from "../api/auth";
 import api from "../api/client";
 import ThemeToggle from "../components/ThemeToggle";
@@ -15,6 +13,7 @@ const Login = () => {
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
 
     const navigate = useNavigate();
     const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
@@ -47,11 +46,16 @@ const Login = () => {
     // =========================
     // Google Login
     // =========================
-    const handleGoogleSuccess = async (credentialResponse) => {
+
+    // =========================
+    // Google Login (Native Implementation)
+    // =========================
+    const handleGoogleLogin = async (response) => {
+        setError("");
         try {
             const res = await api.post(
-                "/auth/google",
-                { token: credentialResponse.credential }
+                "/api/auth/google",
+                { token: response.credential }
             );
 
             localStorage.setItem("token", res.data.access_token);
@@ -60,10 +64,32 @@ const Login = () => {
             console.error("Google Login Error:", err);
             setError(
                 err.response?.data?.detail ||
-                "Google login failed. Please check console for details."
+                "Google authentication failed. Please try again."
             );
         }
     };
+
+    React.useEffect(() => {
+        /* global google */
+        if (window.google && googleClientId) {
+            google.accounts.id.initialize({
+                client_id: googleClientId,
+                callback: handleGoogleLogin,
+            });
+
+            google.accounts.id.renderButton(
+                document.getElementById("google-btn"),
+                {
+                    theme: "outline",
+                    size: "large",
+                    shape: "pill",
+                    width: "240"
+                }
+            );
+        }
+    }, [googleClientId]);
+
+    const handleGoogleSuccess = () => { }; // Replaced by handleGoogleLogin
 
     return (
         <div className="min-h-screen bg-transparent flex items-center justify-center p-6 relative transition-colors duration-1000">
@@ -152,13 +178,20 @@ const Login = () => {
                                 className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-900/40 dark:text-slate-100/40 z-20"
                             />
                             <input
-                                type="password"
+                                type={showPassword ? "text" : "password"}
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
-                                className="w-full islamic-input-modern pl-12"
+                                className="w-full islamic-input-modern pl-12 pr-12"
                                 placeholder="••••••••"
                                 required
                             />
+                            <button
+                                type="button"
+                                onClick={() => setShowPassword(!showPassword)}
+                                className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-900/40 dark:text-slate-100/40 hover:text-gold-soft transition-colors z-20"
+                            >
+                                {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                            </button>
                         </div>
                     </div>
 
@@ -208,24 +241,7 @@ const Login = () => {
 
                     {/* Google Login */}
                     <div className="flex justify-center">
-                        {googleClientId ? (
-                            <GoogleLogin
-                                onSuccess={handleGoogleSuccess}
-                                onError={() => setError("Google Pop-up Failed. Please try again.")}
-                                shape="pill"
-                                locale="en"
-                                text="signin_with"
-                            />
-                        ) : (
-                            <button
-                                type="button"
-                                disabled
-                                className="w-full max-w-xs py-2 px-4 bg-gray-200 text-gray-600 rounded-full font-bold"
-                                title="Google OAuth not configured"
-                            >
-                                Sign in with Google (disabled)
-                            </button>
-                        )}
+                        <div id="google-btn"></div>
                     </div>
                 </div>
 
