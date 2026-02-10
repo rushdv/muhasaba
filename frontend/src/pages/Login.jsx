@@ -4,6 +4,7 @@ import { Moon, Shield, User, Mail, Lock, ArrowRight } from "lucide-react";
 import { GoogleLogin } from "@react-oauth/google";
 import axios from "axios";
 import { login, signup } from "../api/auth";
+import api from "../api/client";
 import ThemeToggle from "../components/ThemeToggle";
 import IslamicLogo from "../components/IslamicLogo";
 
