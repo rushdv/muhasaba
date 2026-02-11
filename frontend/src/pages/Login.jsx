@@ -54,7 +54,7 @@ const Login = () => {
         setError("");
         try {
             const res = await api.post(
-                "/api/auth/google",
+                "/auth/google",
                 { token: response.credential }
             );
 

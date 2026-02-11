@@ -93,7 +93,7 @@ const Dashboard = () => {
 
             <main className="max-w-7xl mx-auto px-4 md:px-6 py-10 md:py-16">
                 <header className="mb-12 md:mb-20 text-center md:text-left">
-                    <p className="text-[9px] md:text-[10px] uppercase font-bold tracking-[0.4em] md:tracking-[0.5em] text-gold-rich mb-3 md:mb-4">Peace be upon you,</p>
+                    <p className="text-[9px] md:text-[10px] uppercase font-bold tracking-[0.4em] md:tracking-[0.5em] text-gold-rich mb-3 md:mb-4">Assalamu Alaykum,</p>
                     <h2 className="text-4xl md:text-6xl font-serif font-bold text-slate-950 dark:text-marfil italic">Welcome Back</h2>
                     <div className="w-16 md:w-24 h-1 bg-gold-soft mt-6 md:mt-8 rounded-full shadow-lg shadow-gold-soft/20 inline-block md:block" />
                 </header>
