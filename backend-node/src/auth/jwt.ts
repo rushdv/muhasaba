@@ -1,0 +1,25 @@
+import jwt from 'jsonwebtoken';
+import { config } from '../config';
+
+export interface TokenPayload {
+    sub: string; // email
+    iat?: number;
+    exp?: number;
+}
+
+export const createAccessToken = (data: { sub: string }): string => {
+    return jwt.sign(data, config.jwt.secret, {
+        algorithm: config.jwt.algorithm,
+        expiresIn: config.jwt.expiresIn,
+    });
+};
+
+export const verifyToken = (token: string): TokenPayload => {
+    try {
+        return jwt.verify(token, config.jwt.secret, {
+            algorithms: [config.jwt.algorithm],
+        }) as TokenPayload;
+    } catch (error) {
+        throw new Error('Invalid or expired token');
+    }
+};
