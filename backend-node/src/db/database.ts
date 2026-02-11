@@ -1,44 +1,45 @@
+// @ts-ignore
 import { Pool } from 'pg';
 import { config } from '../config';
 
 const pool = new Pool({
-    connectionString: config.database.url,
-    ssl: config.database.url.includes('sslmode=require') ? { rejectUnauthorized: false } : undefined,
+  connectionString: config.database.url,
+  ssl: config.database.url.includes('sslmode=require') ? { rejectUnauthorized: false } : undefined,
 });
 
 // Test connection
 pool.on('connect', () => {
-    console.log('✅ Connected to PostgreSQL database');
+  console.log('✅ Connected to PostgreSQL database');
 });
 
-pool.on('error', (err) => {
-    console.error('❌ Unexpected database error:', err);
-    process.exit(-1);
+pool.on('error', (err: any) => {
+  console.error('❌ Unexpected database error:', err);
+  process.exit(-1);
 });
 
 export const query = async (text: string, params?: any[]) => {
-    const start = Date.now();
-    try {
-        const res = await pool.query(text, params);
-        const duration = Date.now() - start;
-        console.log('Executed query', { text, duration, rows: res.rowCount });
-        return res;
-    } catch (error) {
-        console.error('Database query error:', error);
-        throw error;
-    }
+  const start = Date.now();
+  try {
+    const res = await pool.query(text, params);
+    const duration = Date.now() - start;
+    console.log('Executed query', { text, duration, rows: res.rowCount });
+    return res;
+  } catch (error) {
+    console.error('Database query error:', error);
+    throw error;
+  }
 };
 
 export const getClient = async () => {
-    const client = await pool.connect();
-    return client;
+  const client = await pool.connect();
+  return client;
 };
 
 // Initialize database tables
 export const initDatabase = async () => {
-    try {
-        // Create users table
-        await query(`
+  try {
+    // Create users table
+    await query(`
       CREATE TABLE IF NOT EXISTS users (
         id SERIAL PRIMARY KEY,
         username VARCHAR(255) UNIQUE NOT NULL,
@@ -49,8 +50,8 @@ export const initDatabase = async () => {
       )
     `);
 
-        // Create muhasaba_logs table
-        await query(`
+    // Create muhasaba_logs table
+    await query(`
       CREATE TABLE IF NOT EXISTS muhasaba_logs (
         id SERIAL PRIMARY KEY,
         task_name VARCHAR(255) NOT NULL,
@@ -62,8 +63,8 @@ export const initDatabase = async () => {
       )
     `);
 
-        // Create ramadan_reports table
-        await query(`
+    // Create ramadan_reports table
+    await query(`
       CREATE TABLE IF NOT EXISTS ramadan_reports (
         id SERIAL PRIMARY KEY,
         user_id INTEGER REFERENCES users(id) ON DELETE CASCADE NOT NULL,
@@ -120,11 +121,11 @@ export const initDatabase = async () => {
       )
     `);
 
-        console.log('✅ Database tables initialized successfully');
-    } catch (error) {
-        console.error('❌ Error initializing database:', error);
-        throw error;
-    }
+    console.log('✅ Database tables initialized successfully');
+  } catch (error) {
+    console.error('❌ Error initializing database:', error);
+    throw error;
+  }
 };
 
 export default pool;

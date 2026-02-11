@@ -15,7 +15,7 @@ export interface AuthRequest extends Request {
 }
 
 export const getCurrentUser = async (
-    req: AuthRequest,
+    req: Request,
     res: Response,
     next: NextFunction
 ): Promise<void> => {
@@ -49,7 +49,7 @@ export const getCurrentUser = async (
                 return;
             }
 
-            req.user = result.rows[0];
+            (req as AuthRequest).user = result.rows[0];
             next();
         } catch (error) {
             res.status(401).json({ detail: 'Could not validate credentials' });
