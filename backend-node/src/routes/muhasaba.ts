@@ -1,14 +1,14 @@
-import { Router, Response } from 'express';
+import { Router, Request, Response } from 'express';
 import { query } from '../db/database';
 import { getCurrentUser, AuthRequest } from '../auth/deps';
 
 const router = Router();
 
 // Create muhasaba log
-router.post('/', getCurrentUser, async (req: AuthRequest, res: Response): Promise<void> => {
+router.post('/', getCurrentUser, async (req: Request, res: Response): Promise<void> => {
     try {
         const { task_name, note } = req.body;
-        const userId = req.user!.id;
+        const userId = (req as AuthRequest).user!.id;
 
         const result = await query(
             'INSERT INTO muhasaba_logs (task_name, note, user_id) VALUES ($1, $2, $3) RETURNING *',
@@ -23,9 +23,9 @@ router.post('/', getCurrentUser, async (req: AuthRequest, res: Response): Promis
 });
 
 // Get all logs for current user
-router.get('/', getCurrentUser, async (req: AuthRequest, res: Response): Promise<void> => {
+router.get('/', getCurrentUser, async (req: Request, res: Response): Promise<void> => {
     try {
-        const userId = req.user!.id;
+        const userId = (req as AuthRequest).user!.id;
 
         const result = await query(
             'SELECT * FROM muhasaba_logs WHERE user_id = $1 ORDER BY log_date DESC',
@@ -40,10 +40,10 @@ router.get('/', getCurrentUser, async (req: AuthRequest, res: Response): Promise
 });
 
 // Update log status (toggle completion)
-router.patch('/:log_id', getCurrentUser, async (req: AuthRequest, res: Response): Promise<void> => {
+router.patch('/:log_id', getCurrentUser, async (req: Request, res: Response): Promise<void> => {
     try {
         const logId = parseInt(req.params.log_id, 10);
-        const userId = req.user!.id;
+        const userId = (req as AuthRequest).user!.id;
 
         // Find the log
         const logResult = await query(
@@ -73,10 +73,10 @@ router.patch('/:log_id', getCurrentUser, async (req: AuthRequest, res: Response)
 });
 
 // Delete log
-router.delete('/:log_id', getCurrentUser, async (req: AuthRequest, res: Response): Promise<void> => {
+router.delete('/:log_id', getCurrentUser, async (req: Request, res: Response): Promise<void> => {
     try {
         const logId = parseInt(req.params.log_id, 10);
-        const userId = req.user!.id;
+        const userId = (req as AuthRequest).user!.id;
 
         // Find the log
         const logResult = await query(

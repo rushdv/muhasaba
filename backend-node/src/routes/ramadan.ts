@@ -24,9 +24,9 @@ router.get('/content/:day', async (req: Request, res: Response): Promise<void> =
 });
 
 // Upsert (create or update) ramadan report
-router.post('/report', getCurrentUser, async (req: AuthRequest, res: Response): Promise<void> => {
+router.post('/report', getCurrentUser, async (req: Request, res: Response): Promise<void> => {
     try {
-        const userId = req.user!.id;
+        const userId = (req as AuthRequest).user!.id;
         const reportData = req.body;
 
         // Check if report exists
@@ -66,9 +66,9 @@ router.post('/report', getCurrentUser, async (req: AuthRequest, res: Response): 
 });
 
 // Get history of all reports for current user
-router.get('/history', getCurrentUser, async (req: AuthRequest, res: Response): Promise<void> => {
+router.get('/history', getCurrentUser, async (req: Request, res: Response): Promise<void> => {
     try {
-        const userId = req.user!.id;
+        const userId = (req as AuthRequest).user!.id;
 
         const result = await query(
             'SELECT * FROM ramadan_reports WHERE user_id = $1 ORDER BY day_number ASC',
@@ -83,9 +83,9 @@ router.get('/history', getCurrentUser, async (req: AuthRequest, res: Response): 
 });
 
 // Get analytics for current user
-router.get('/analytics', getCurrentUser, async (req: AuthRequest, res: Response): Promise<void> => {
+router.get('/analytics', getCurrentUser, async (req: Request, res: Response): Promise<void> => {
     try {
-        const userId = req.user!.id;
+        const userId = (req as AuthRequest).user!.id;
 
         const result = await query(
             'SELECT * FROM ramadan_reports WHERE user_id = $1',
@@ -108,11 +108,11 @@ router.get('/analytics', getCurrentUser, async (req: AuthRequest, res: Response)
         }
 
         const totalDays = reports.length;
-        const fastedDays = reports.filter(r => r.is_fasting).length;
+        const fastedDays = reports.filter((r: any) => r.is_fasting).length;
 
         // Calculate salah consistency
         let salahCount = 0;
-        reports.forEach(r => {
+        reports.forEach((r: any) => {
             salahCount += [r.salah_fajr, r.salah_dhuhr, r.salah_asr, r.salah_maghrib, r.salah_isha]
                 .filter(Boolean).length;
         });
@@ -120,7 +120,7 @@ router.get('/analytics', getCurrentUser, async (req: AuthRequest, res: Response)
 
         // Quran summary
         const quranList: string[] = [];
-        reports.forEach(r => {
+        reports.forEach((r: any) => {
             if (r.quran_para || r.quran_page || r.quran_ayat) {
                 const parts: string[] = [];
                 if (r.quran_para) parts.push(`Para ${r.quran_para}`);
@@ -132,9 +132,9 @@ router.get('/analytics', getCurrentUser, async (req: AuthRequest, res: Response)
             }
         });
 
-        const namesMemorized = reports.filter(r => r.allahur_naam_shikkha).length * 3;
-        const avgEnergy = reports.reduce((sum, r) => sum + r.spiritual_energy, 0) / totalDays;
-        const sadaqahDays = reports.filter(r => r.had_sadaqah).length;
+        const namesMemorized = reports.filter((r: any) => r.allahur_naam_shikkha).length * 3;
+        const avgEnergy = reports.reduce((sum: number, r: any) => sum + r.spiritual_energy, 0) / totalDays;
+        const sadaqahDays = reports.filter((r: any) => r.had_sadaqah).length;
 
         res.status(200).json({
             total_fasted_days: fastedDays,

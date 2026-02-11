@@ -8,10 +8,10 @@ export interface TokenPayload {
 }
 
 export const createAccessToken = (data: { sub: string }): string => {
-    return jwt.sign(data, config.jwt.secret, {
+    return jwt.sign(data, config.jwt.secret as string, {
         algorithm: config.jwt.algorithm,
         expiresIn: config.jwt.expiresIn,
-    });
+    } as any);
 };
 
 export const verifyToken = (token: string): TokenPayload => {
