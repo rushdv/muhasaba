@@ -25,7 +25,7 @@ const RamadanWrapped = () => {
     return (
         <div className="min-h-screen bg-transparent font-sans pb-24 text-slate-950 dark:text-slate-50 transition-colors duration-1000">
             {/* Header */}
-            <header className="sticky top-0 z-50 bg-white/20 dark:bg-obsidian-950/20 backdrop-blur-[40px] border-b border-gold-soft/10 px-4 md:px-8 py-4 md:py-5">
+            <header className="sticky top-0 z-50 bg-white/20 dark:bg-obsidian-950/20 backdrop-blur-[40px] border-b border-gold-soft/10 px-3 md:px-8 py-3 md:py-5">
                 <div className="max-w-5xl mx-auto flex justify-between items-center gap-2">
                     <button onClick={() => navigate('/dashboard')} className="group flex items-center gap-3 text-slate-900 dark:text-slate-50 font-bold">
                         <div className="p-2 transition-transform group-hover:-translate-x-1 bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gold-soft/20">
@@ -34,9 +34,9 @@ const RamadanWrapped = () => {
                         <span className="hidden md:inline uppercase tracking-widest text-[10px] text-gold-rich">{t('common.back')}</span>
                     </button>
 
-                    <div className="flex items-center gap-3">
-                        <IslamicLogo size={20} className="text-gold-soft" />
-                        <h1 className="text-xl font-serif font-bold italic tracking-wider">{t('wrapped.insightsTitle')}</h1>
+                    <div className="flex items-center gap-2 md:gap-3 overflow-hidden">
+                        <IslamicLogo size={window.innerWidth < 768 ? 24 : 32} className="text-gold-soft shrink-0" />
+                        <h1 className="text-lg md:text-xl font-serif font-bold italic tracking-wider truncate">{t('wrapped.insightsTitle')}</h1>
                     </div>
 
                     <div className="flex items-center gap-4">

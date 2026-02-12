@@ -97,7 +97,7 @@ const RamadanPlanner = () => {
     return (
         <div className="min-h-screen bg-transparent font-sans pb-24 text-slate-950 dark:text-slate-50 transition-colors duration-1000">
             {/* Header / Nav */}
-            <header className="sticky top-0 z-50 bg-white/20 dark:bg-obsidian-950/20 backdrop-blur-[40px] border-b border-gold-soft/10 px-6 md:px-8 py-4 md:py-5">
+            <header className="sticky top-0 z-50 bg-white/20 dark:bg-obsidian-950/20 backdrop-blur-[40px] border-b border-gold-soft/10 px-3 md:px-8 py-3 md:py-5">
                 <div className="max-w-7xl mx-auto flex justify-between items-center">
                     <button onClick={() => navigate('/dashboard')} className="group flex items-center gap-3 text-slate-900 dark:text-slate-50 font-bold">
                         <div className="p-2 transition-transform group-hover:-translate-x-1 bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gold-soft/20">
@@ -107,15 +107,15 @@ const RamadanPlanner = () => {
                     </button>
 
                     <div className="flex items-center gap-2 md:gap-8">
-                        <button onClick={() => setDay(d => Math.max(1, d - 1))} className="p-1 md:p-2 hover:bg-gold-soft/10 rounded-xl transition-colors">
-                            <ChevronLeft size={20} className="text-gold-rich md:w-6" />
+                        <button onClick={() => setDay(d => Math.max(1, d - 1))} className="p-1.5 hover:bg-gold-soft/10 rounded-xl transition-colors">
+                            <ChevronLeft size={18} className="text-gold-rich md:w-6" />
                         </button>
-                        <div className="px-4 md:px-8 py-1.5 md:py-2 bg-slate-950 dark:bg-obsidian-900 text-white rounded-xl md:rounded-2xl shadow-xl flex flex-col items-center border border-gold-soft/20 min-w-[100px] md:min-w-[140px]">
-                            <span className="text-[7px] md:text-[10px] uppercase font-bold tracking-[0.2em] md:tracking-[0.3em] text-gold-soft mb-0.5 md:mb-1">{t('ramadan.trackingJourney')}</span>
-                            <h1 className="text-sm md:text-2xl font-serif font-bold italic tracking-wider leading-none">{t('ramadan.day')} {day.toString().padStart(2, '0')}</h1>
+                        <div className="px-3 md:px-8 py-1.5 md:py-2 bg-slate-950 dark:bg-obsidian-900 text-white rounded-xl md:rounded-2xl shadow-xl flex flex-col items-center border border-gold-soft/20 min-w-[80px] md:min-w-[140px]">
+                            <span className="text-[6px] md:text-[10px] uppercase font-bold tracking-[0.2em] md:tracking-[0.3em] text-gold-soft mb-0.5 md:mb-1">{t('ramadan.trackingJourney')}</span>
+                            <h1 className="text-xs md:text-2xl font-serif font-bold italic tracking-wider leading-none">{t('ramadan.day')} {day.toString().padStart(2, '0')}</h1>
                         </div>
-                        <button onClick={() => setDay(d => Math.min(30, d + 1))} className="p-1 md:p-2 hover:bg-gold-soft/10 rounded-xl transition-colors">
-                            <ChevronRight size={20} className="text-gold-rich md:w-6" />
+                        <button onClick={() => setDay(d => Math.min(30, d + 1))} className="p-1.5 hover:bg-gold-soft/10 rounded-xl transition-colors">
+                            <ChevronRight size={18} className="text-gold-rich md:w-6" />
                         </button>
                     </div>
 
@@ -130,13 +130,13 @@ const RamadanPlanner = () => {
                         <button
                             onClick={handleSave}
                             disabled={saving}
-                            className="celestial-button flex items-center gap-3 group px-6 md:px-8 py-3 md:py-4 transition-all hover:scale-[1.02] border-gold-soft/30"
+                            className="celestial-button flex items-center gap-2 group px-4 md:px-8 py-2.5 md:py-4 transition-all hover:scale-[1.02] border-gold-soft/30"
                         >
                             {saving ? (
                                 <div className="w-5 h-5 border-2 border-marfil border-t-transparent rounded-full animate-spin" />
                             ) : (
                                 <>
-                                    <Save size={18} className="transition-transform group-hover:scale-110" />
+                                    <Save size={16} className="transition-transform group-hover:scale-110" />
                                     <span className="hidden sm:inline uppercase tracking-widest text-[11px]">{t('common.save')}</span>
                                 </>
                             )}

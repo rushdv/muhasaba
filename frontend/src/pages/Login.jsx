@@ -16,6 +16,7 @@ const Login = () => {
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
+    const [rememberMe, setRememberMe] = useState(true); // Default to true for convenience
 
     const navigate = useNavigate();
     const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
@@ -30,9 +31,9 @@ const Login = () => {
 
         try {
             if (isSignup) {
-                await signup(username, email, password);
+                await signup(username, email, password, rememberMe);
             } else {
-                await login(email, password);
+                await login(email, password, rememberMe);
             }
             navigate("/dashboard");
         } catch (err) {
@@ -107,14 +108,14 @@ const Login = () => {
                 <ThemeToggle />
             </div>
 
-            <div className="max-w-md w-full celestial-card border-beam p-10 md:p-12 relative overflow-hidden group">
+            <div className="max-w-md w-full celestial-card border-beam p-6 md:p-12 relative overflow-hidden group">
                 {/* Glow */}
                 <div className="absolute -top-24 -right-24 w-48 h-48 bg-gold-soft/10 rounded-full blur-3xl group-hover:bg-gold-soft/20 transition-all duration-700" />
 
                 {/* Header */}
                 <div className="text-center mb-8 relative z-10">
-                    <div className="w-16 h-16 bg-slate-950 dark:bg-obsidian-900 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-2xl border border-gold-soft/30 transform transition-transform group-hover:rotate-12">
-                        <IslamicLogo size={32} className="text-gold-soft" />
+                    <div className="w-20 h-20 bg-slate-950 dark:bg-obsidian-900 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-2xl border border-gold-soft/30 transform transition-transform group-hover:rotate-12 overflow-hidden">
+                        <IslamicLogo size={56} className="text-gold-soft" />
                     </div>
 
                     <h1 className="text-4xl font-serif font-bold italic mb-2 text-slate-950 dark:text-gold-soft">
@@ -202,6 +203,29 @@ const Login = () => {
                                 {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
                             </button>
                         </div>
+                    </div>
+
+                    {/* Remember Me */}
+                    <div className="flex items-center justify-between px-1">
+                        <label className="flex items-center gap-2 cursor-pointer group/check">
+                            <div className="relative">
+                                <input
+                                    type="checkbox"
+                                    checked={rememberMe}
+                                    onChange={(e) => setRememberMe(e.target.checked)}
+                                    className="sr-only peer"
+                                />
+                                <div className="w-5 h-5 border-2 border-gold-soft/30 rounded-md bg-white/5 peer-checked:bg-gold-soft peer-checked:border-gold-soft transition-all duration-300" />
+                                <div className="absolute inset-0 flex items-center justify-center text-white scale-0 peer-checked:scale-100 transition-transform duration-300">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" className="w-3 h-3">
+                                        <polyline points="20 6 9 17 4 12" />
+                                    </svg>
+                                </div>
+                            </div>
+                            <span className="text-[10px] font-bold uppercase tracking-widest text-slate-900/40 dark:text-slate-100/40 group-hover/check:text-gold-soft transition-colors">
+                                {t('auth.rememberMe')}
+                            </span>
+                        </label>
                     </div>
 
                     {/* Submit */}
