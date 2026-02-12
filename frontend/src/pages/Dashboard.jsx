@@ -3,9 +3,11 @@ import { useNavigate } from 'react-router-dom';
 import { Moon, LogOut, Sparkles, Activity, Clock, ChevronRight, BookOpen } from 'lucide-react';
 import ThemeToggle from '../components/ThemeToggle';
 import IslamicLogo from '../components/IslamicLogo';
+import { useLanguage } from '../context/LanguageContext';
 
 const Dashboard = () => {
     const navigate = useNavigate();
+    const { language, toggleLanguage, t } = useLanguage();
 
     const logout = () => {
         localStorage.removeItem('token');
@@ -14,16 +16,16 @@ const Dashboard = () => {
 
     const modules = [
         {
-            title: 'Ramadan Planner',
-            desc: 'Your daily companion for Ibadah, trackers & spiritual growth.',
+            title: t('dashboard.ramadanPlanner'),
+            desc: t('dashboard.ramadanPlannerDesc'),
             icon: <IslamicLogo size={32} />,
             path: '/ramadan',
             color: 'bg-slate-950 dark:bg-obsidian-900',
             textColor: 'text-gold-soft'
         },
         {
-            title: 'Spiritual Insights',
-            desc: 'Reflect on your journey with personalized Ramadan analytics.',
+            title: t('dashboard.spiritualInsights'),
+            desc: t('dashboard.spiritualInsightsDesc'),
             icon: <Activity size={32} />,
             path: '/ramadan/wrapped',
             color: 'bg-gold-soft/10 dark:bg-gold-soft/5',
@@ -31,8 +33,8 @@ const Dashboard = () => {
             border: 'border-gold-soft/20'
         },
         {
-            title: 'Yearly Planner',
-            desc: 'Mapping your spiritual goals throughout the Islamic year.',
+            title: t('dashboard.yearlyPlanner'),
+            desc: t('dashboard.yearlyPlannerDesc'),
             icon: <BookOpen size={32} />,
             path: '/yearly',
             color: 'bg-white dark:bg-obsidian-900/30',
@@ -40,8 +42,8 @@ const Dashboard = () => {
             disabled: true
         },
         {
-            title: 'Daily Protocol',
-            desc: 'Structured routines for consistent spiritual productivity.',
+            title: t('dashboard.dailyProtocol'),
+            desc: t('dashboard.dailyProtocolDesc'),
             icon: <Clock size={32} />,
             path: '/daily',
             color: 'bg-white dark:bg-obsidian-900/30',
@@ -49,8 +51,8 @@ const Dashboard = () => {
             disabled: true
         },
         {
-            title: 'Self Accountability',
-            desc: 'Comprehensive records to reflect and improve daily character.',
+            title: t('dashboard.selfAccountability'),
+            desc: t('dashboard.selfAccountabilityDesc'),
             icon: <Activity size={32} />,
             path: '/accountability',
             color: 'bg-white dark:bg-obsidian-900/30',
@@ -58,8 +60,8 @@ const Dashboard = () => {
             disabled: true
         },
         {
-            title: 'Muhasaba Logs',
-            desc: 'Maintain consistency through daily self-accountability.',
+            title: t('dashboard.muhasabaLogs'),
+            desc: t('dashboard.muhasabaLogsDesc'),
             icon: <Clock size={32} />,
             path: '/muhasaba',
             color: 'bg-white dark:bg-obsidian-900/30',
@@ -77,24 +79,30 @@ const Dashboard = () => {
                         <IslamicLogo size={20} className="text-gold-soft" />
                     </div>
                     <div>
-                        <h1 className="text-lg md:text-2xl font-serif font-bold italic tracking-tight text-slate-950 dark:text-gold-soft">Muhasabah</h1>
+                        <h1 className="text-lg md:text-2xl font-serif font-bold italic tracking-tight text-slate-950 dark:text-gold-soft">{t('common.appName')}</h1>
                     </div>
                 </div>
                 <div className="flex items-center gap-4">
+                    <button
+                        onClick={toggleLanguage}
+                        className="w-10 h-10 md:w-12 md:h-12 flex items-center justify-center rounded-xl md:rounded-2xl bg-white dark:bg-obsidian-900 border border-gold-soft/20 text-slate-900 dark:text-gold-soft font-bold text-xs md:text-sm hover:bg-gold-soft/5 dark:hover:bg-gold-soft/10 transition-all shadow-sm"
+                    >
+                        {language === 'en' ? 'BN' : 'EN'}
+                    </button>
                     <ThemeToggle />
                     <button
                         onClick={logout}
                         className="flex items-center gap-2 md:gap-3 px-4 md:px-6 py-2 md:py-2.5 bg-white dark:bg-slate-800 border border-gold-soft/20 text-slate-900 dark:text-slate-100 text-[10px] md:text-xs font-bold uppercase tracking-widest rounded-lg md:rounded-xl hover:bg-gold-soft/5 dark:hover:bg-gold-soft/10 transition-all shadow-sm"
                     >
-                        <LogOut size={14} className="md:w-4 md:h-4" /> Sign Out
+                        <LogOut size={14} className="md:w-4 md:h-4" /> {t('common.signOut')}
                     </button>
                 </div>
             </nav>
 
             <main className="max-w-7xl mx-auto px-4 md:px-6 py-10 md:py-16">
                 <header className="mb-12 md:mb-20 text-center md:text-left">
-                    <p className="text-[9px] md:text-[10px] uppercase font-bold tracking-[0.4em] md:tracking-[0.5em] text-gold-rich mb-3 md:mb-4">Assalamu Alaykum,</p>
-                    <h2 className="text-4xl md:text-6xl font-serif font-bold text-slate-950 dark:text-marfil italic">Welcome Back</h2>
+                    <p className="text-[9px] md:text-[10px] uppercase font-bold tracking-[0.4em] md:tracking-[0.5em] text-gold-rich mb-3 md:mb-4">{t('dashboard.greeting')}</p>
+                    <h2 className="text-4xl md:text-6xl font-serif font-bold text-slate-950 dark:text-marfil italic">{t('dashboard.welcome')}</h2>
                     <div className="w-16 md:w-24 h-1 bg-gold-soft mt-6 md:mt-8 rounded-full shadow-lg shadow-gold-soft/20 inline-block md:block" />
                 </header>
 
@@ -121,7 +129,7 @@ const Dashboard = () => {
                                         <ChevronRight size={16} className={!m.disabled ? "group-hover:translate-x-1 transition-transform" : ""} />
                                     </div>
                                     <span className={`text-[10px] md:text-xs font-bold uppercase tracking-widest ${m.disabled ? 'text-slate-900/20 dark:text-slate-100/20' : (m.color.includes('bg-slate-950') ? 'text-gold-soft/60' : 'text-slate-900/40 dark:text-slate-100/40')}`}>
-                                        {m.disabled ? 'Coming Soon' : 'Explore'}
+                                        {m.disabled ? t('common.comingSoon') : t('common.explore')}
                                     </span>
                                 </div>
                             </div>

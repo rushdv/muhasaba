@@ -5,45 +5,49 @@ import RamadanPlanner from './pages/RamadanPlanner';
 import RamadanWrapped from './pages/RamadanWrapped';
 import ProtectedRoute from './components/ProtectedRoute';
 
+import { LanguageProvider } from './context/LanguageContext';
+
 function App() {
   return (
-    <Router>
-      <div className="mesh-gradient" />
-      <Routes>
-        <Route path="/login" element={<Login />} />
+    <LanguageProvider>
+      <Router>
+        <div className="mesh-gradient" />
+        <Routes>
+          <Route path="/login" element={<Login />} />
 
 
-        <Route
-          path="/dashboard"
-          element={
-            <ProtectedRoute>
-              <Dashboard />
-            </ProtectedRoute>
-          }
-        />
+          <Route
+            path="/dashboard"
+            element={
+              <ProtectedRoute>
+                <Dashboard />
+              </ProtectedRoute>
+            }
+          />
 
 
-        <Route
-          path="/ramadan"
-          element={
-            <ProtectedRoute>
-              <RamadanPlanner />
-            </ProtectedRoute>
-          }
-        />
+          <Route
+            path="/ramadan"
+            element={
+              <ProtectedRoute>
+                <RamadanPlanner />
+              </ProtectedRoute>
+            }
+          />
 
-        <Route
-          path="/ramadan/wrapped"
-          element={
-            <ProtectedRoute>
-              <RamadanWrapped />
-            </ProtectedRoute>
-          }
-        />
+          <Route
+            path="/ramadan/wrapped"
+            element={
+              <ProtectedRoute>
+                <RamadanWrapped />
+              </ProtectedRoute>
+            }
+          />
 
-        <Route path="/" element={<Login />} />
-      </Routes>
-    </Router>
+          <Route path="/" element={<Login />} />
+        </Routes>
+      </Router>
+    </LanguageProvider>
   );
 }
 
