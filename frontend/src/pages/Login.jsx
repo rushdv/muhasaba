@@ -5,8 +5,10 @@ import { login, signup } from "../api/auth";
 import api from "../api/client";
 import ThemeToggle from "../components/ThemeToggle";
 import IslamicLogo from "../components/IslamicLogo";
+import { useLanguage } from "../context/LanguageContext";
 
 const Login = () => {
+    const { language, toggleLanguage, t } = useLanguage();
     const [isSignup, setIsSignup] = useState(false);
     const [email, setEmail] = useState("");
     const [username, setUsername] = useState("");
@@ -36,7 +38,7 @@ const Login = () => {
         } catch (err) {
             setError(
                 err.response?.data?.detail ||
-                "Authentication failed. Please check your details."
+                t('auth.authFailed')
             );
         } finally {
             setLoading(false);
@@ -64,7 +66,7 @@ const Login = () => {
             console.error("Google Login Error:", err);
             setError(
                 err.response?.data?.detail ||
-                "Google authentication failed. Please try again."
+                t('auth.googleAuthFailed')
             );
         }
     };
@@ -94,7 +96,14 @@ const Login = () => {
     return (
         <div className="min-h-screen bg-transparent flex items-center justify-center p-6 relative transition-colors duration-1000">
             {/* Theme Toggle */}
-            <div className="absolute top-6 right-6 z-50">
+            {/* Toggles */}
+            <div className="absolute top-6 right-6 z-50 flex items-center gap-4">
+                <button
+                    onClick={toggleLanguage}
+                    className="w-10 h-10 md:w-12 md:h-12 flex items-center justify-center rounded-xl md:rounded-2xl bg-white dark:bg-obsidian-900 border border-gold-soft/20 text-slate-900 dark:text-gold-soft font-bold text-xs md:text-sm hover:bg-gold-soft/5 dark:hover:bg-gold-soft/10 transition-all shadow-sm"
+                >
+                    {language === 'en' ? 'BN' : 'EN'}
+                </button>
                 <ThemeToggle />
             </div>
 
@@ -109,11 +118,11 @@ const Login = () => {
                     </div>
 
                     <h1 className="text-4xl font-serif font-bold italic mb-2 text-slate-950 dark:text-gold-soft">
-                        Muhasabah
+                        {t('common.appName')}
                     </h1>
 
                     <p className="text-[10px] font-bold text-gold-rich tracking-[0.3em] uppercase">
-                        {isSignup ? "Create Your Account" : "Islamic Personal Hub"}
+                        {isSignup ? t('auth.createAccount') : t('auth.islamicHub')}
                     </p>
                 </div>
 
@@ -129,7 +138,7 @@ const Login = () => {
                     {isSignup && (
                         <div className="space-y-2">
                             <label className="text-[10px] uppercase font-bold tracking-[0.2em] text-slate-900/40 dark:text-slate-100/40 ml-1">
-                                Username
+                                {t('auth.username')}
                             </label>
                             <div className="relative">
                                 <User
@@ -150,7 +159,7 @@ const Login = () => {
 
                     <div className="space-y-2">
                         <label className="text-[10px] uppercase font-bold tracking-[0.2em] text-slate-900/40 dark:text-slate-100/40 ml-1">
-                            Email Address
+                            {t('auth.email')}
                         </label>
                         <div className="relative">
                             <Mail
@@ -170,7 +179,7 @@ const Login = () => {
 
                     <div className="space-y-2">
                         <label className="text-[10px] uppercase font-bold tracking-[0.2em] text-slate-900/40 dark:text-slate-100/40 ml-1">
-                            Password
+                            {t('auth.password')}
                         </label>
                         <div className="relative">
                             <Lock
@@ -206,7 +215,7 @@ const Login = () => {
                         ) : (
                             <>
                                 <span className="uppercase tracking-[0.2em] text-xs font-bold">
-                                    {isSignup ? "Begin the Journey" : "Sign In to Hub"}
+                                    {isSignup ? t('auth.beginJourney') : t('auth.signInToHub')}
                                 </span>
                                 <ArrowRight size={16} />
                             </>
@@ -223,8 +232,8 @@ const Login = () => {
                         className="w-full text-[10px] font-bold uppercase tracking-widest text-emerald-900/40 dark:text-emerald-100/40 hover:text-gold-rich dark:hover:text-gold-soft transition-colors"
                     >
                         {isSignup
-                            ? "Already have an account? Sign In"
-                            : "Don't have an account? Sign Up"}
+                            ? t('auth.alreadyHaveAccount')
+                            : t('auth.dontHaveAccount')}
                     </button>
                 </form>
 
@@ -235,7 +244,7 @@ const Login = () => {
                             <div className="w-full border-t border-gold-soft/10"></div>
                         </div>
                         <span className="relative px-4 bg-white/40 dark:bg-obsidian-900/40 text-[10px] font-bold uppercase tracking-widest text-slate-900/30 dark:text-slate-100/30">
-                            Or continue with
+                            {t('auth.orContinueWith')}
                         </span>
                     </div>
 
@@ -246,7 +255,7 @@ const Login = () => {
                 </div>
 
                 <p className="mt-10 text-center text-[10px] text-slate-900/20 dark:text-slate-100/20 font-bold uppercase tracking-[0.3em]">
-                    Spiritual Excellence & Devotion
+                    {t('auth.spiritualExcellence')}
                 </p>
             </div>
         </div>

@@ -143,6 +143,7 @@ router.get('/analytics', getCurrentUser, async (req: Request, res: Response): Pr
             total_names_memorized: namesMemorized,
             avg_spiritual_energy: Math.round(avgEnergy * 10) / 10,
             total_sadaqah_days: sadaqahDays,
+            total_journey_days: totalDays,
             highlight_text: `Masha'Allah! You have completed a spiritual journey of ${totalDays} days.`,
         });
     } catch (error) {

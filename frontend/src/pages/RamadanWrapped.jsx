@@ -4,11 +4,13 @@ import { getRamadanAnalytics } from '../api/ramadan';
 import { Sparkles, ArrowLeft, Star, Heart, Book, Activity, Moon, Compass, ChevronRight } from 'lucide-react';
 import ThemeToggle from '../components/ThemeToggle';
 import IslamicLogo from '../components/IslamicLogo';
+import { useLanguage } from '../context/LanguageContext';
 
 const RamadanWrapped = () => {
     const [data, setData] = useState(null);
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
+    const { language, toggleLanguage, t } = useLanguage();
 
     useEffect(() => {
         getRamadanAnalytics().then(setData).finally(() => setLoading(false));
@@ -29,15 +31,23 @@ const RamadanWrapped = () => {
                         <div className="p-2 transition-transform group-hover:-translate-x-1 bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gold-soft/20">
                             <ArrowLeft size={18} />
                         </div>
-                        <span className="hidden md:inline uppercase tracking-widest text-[10px] text-gold-rich">Dashboard</span>
+                        <span className="hidden md:inline uppercase tracking-widest text-[10px] text-gold-rich">{t('common.back')}</span>
                     </button>
 
                     <div className="flex items-center gap-3">
                         <IslamicLogo size={20} className="text-gold-soft" />
-                        <h1 className="text-xl font-serif font-bold italic tracking-wider">Ramadan Insights</h1>
+                        <h1 className="text-xl font-serif font-bold italic tracking-wider">{t('wrapped.insightsTitle')}</h1>
                     </div>
 
-                    <ThemeToggle />
+                    <div className="flex items-center gap-4">
+                        <button
+                            onClick={toggleLanguage}
+                            className="w-10 h-10 md:w-12 md:h-12 flex items-center justify-center rounded-xl md:rounded-2xl bg-white dark:bg-obsidian-900 border border-gold-soft/20 text-slate-900 dark:text-gold-soft font-bold text-xs md:text-sm hover:bg-gold-soft/5 dark:hover:bg-gold-soft/10 transition-all shadow-sm"
+                        >
+                            {language === 'en' ? 'BN' : 'EN'}
+                        </button>
+                        <ThemeToggle />
+                    </div>
                 </div>
             </header>
 
@@ -47,10 +57,14 @@ const RamadanWrapped = () => {
                     <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-[0.03] dark:opacity-[0.05] -z-10">
                         <Compass size={window.innerWidth < 768 ? 300 : 400} />
                     </div>
-                    <p className="text-[10px] uppercase font-bold tracking-[0.5em] text-gold-rich mb-4 md:mb-6">Your Sacred Evolution</p>
-                    <h2 className="text-4xl md:text-6xl font-serif font-bold text-slate-950 dark:text-slate-50 italic mb-6 md:mb-8 leading-tight">Your Spiritual Wrapped</h2>
+                    <p className="text-[10px] uppercase font-bold tracking-[0.5em] text-gold-rich mb-4 md:mb-6">{t('wrapped.sacredEvolution')}</p>
+                    <h2 className="text-4xl md:text-6xl font-serif font-bold text-slate-950 dark:text-slate-50 italic mb-6 md:mb-8 leading-tight">{t('wrapped.spiritualWrapped')}</h2>
                     <div className="max-w-2xl mx-auto celestial-card border-beam p-5 md:p-6 bg-slate-950 dark:bg-obsidian-900 text-marfil border-none shadow-gold-soft/10 shadow-xl">
-                        <p className="text-base md:text-lg font-medium italic opacity-90">"{data?.highlight_text}"</p>
+                        <p className="text-base md:text-lg font-medium italic opacity-90">
+                            "{data?.total_journey_days > 0
+                                ? t('common.journeyMessage', { count: data.total_journey_days })
+                                : t('common.journeyStart')}"
+                        </p>
                     </div>
                 </section>
 
@@ -58,30 +72,30 @@ const RamadanWrapped = () => {
                 <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-8">
                     <WrappedCard
                         icon={<Moon size={24} />}
-                        title="Fasted Days"
+                        title={t('wrapped.fastedDays')}
                         value={data?.total_fasted_days}
-                        subtitle="Sacred observances"
+                        subtitle={t('wrapped.sacredObservances')}
                         accent="gold"
                     />
                     <WrappedCard
                         icon={<Activity size={24} />}
-                        title="Prayer Rate"
+                        title={t('wrapped.prayerRate')}
                         value={`${data?.salah_consistency_percentage || 0}%`}
-                        subtitle="Spiritual alignment"
+                        subtitle={t('wrapped.spiritualAlignment')}
                         accent="indigo"
                     />
                     <WrappedCard
                         icon={<Book size={24} />}
-                        title="Divine Names"
+                        title={t('wrapped.divineNames')}
                         value={data?.total_names_memorized}
-                        subtitle="Attributes learned"
+                        subtitle={t('wrapped.attributesLearned')}
                         accent="gold"
                     />
                     <WrappedCard
                         icon={<Heart size={24} />}
-                        title="Good Deeds"
+                        title={t('wrapped.goodDeeds')}
                         value={data?.total_sadaqah_days}
-                        subtitle="Acts of devotion"
+                        subtitle={t('wrapped.actsOfDevotion')}
                         accent="indigo"
                     />
                 </div>
@@ -92,8 +106,8 @@ const RamadanWrapped = () => {
                         <Star size={window.innerWidth < 768 ? 60 : 120} className="text-gold-rich" />
                     </div>
                     <header className="mb-6 md:mb-10">
-                        <h3 className="text-2xl md:text-3xl font-serif font-bold italic text-slate-950 dark:text-slate-50 mb-2">Quranic Progress</h3>
-                        <p className="text-[10px] uppercase font-bold tracking-widest text-slate-900/40 dark:text-slate-100/40">Milestones reaching the heart</p>
+                        <h3 className="text-2xl md:text-3xl font-serif font-bold italic text-slate-950 dark:text-slate-50 mb-2">{t('wrapped.quranicProgress')}</h3>
+                        <p className="text-[10px] uppercase font-bold tracking-widest text-slate-900/40 dark:text-slate-100/40">{t('wrapped.milestones')}</p>
                     </header>
                     <div className="flex flex-wrap gap-3 md:gap-4 relative z-10">
                         {data?.quran_summary?.length > 0 ? data.quran_summary.map((q, idx) => (
@@ -102,15 +116,15 @@ const RamadanWrapped = () => {
                                 {q}
                             </div>
                         )) : (
-                            <p className="text-slate-900/40 dark:text-slate-100/40 font-medium italic text-sm">Your journey with the Quran is just beginning...</p>
+                            <p className="text-slate-900/40 dark:text-slate-100/40 font-medium italic text-sm">{t('wrapped.quranJourneyStart')}</p>
                         )}
                     </div>
                 </section>
 
                 <footer className="text-center pt-20">
-                    <p className="text-[10px] uppercase font-bold tracking-[0.4em] text-gold-rich mb-4">Ramadan Kareem</p>
+                    <p className="text-[10px] uppercase font-bold tracking-[0.4em] text-gold-rich mb-4">{t('wrapped.ramadanKareem')}</p>
                     <p className="font-serif italic text-slate-900/40 dark:text-slate-100/40 leading-relaxed max-w-lg mx-auto">
-                        "Whoever fasts Ramadan out of faith and in the hope of reward, his previous sins will be forgiven."
+                        "{t('wrapped.footerHadith')}"
                     </p>
                 </footer>
             </main>
