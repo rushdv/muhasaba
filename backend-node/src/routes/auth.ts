@@ -26,13 +26,15 @@ router.post('/signup', async (req: Request, res: Response): Promise<void> => {
 
         // Hash password and create user
         const hashedPassword = await hashPassword(password);
+        const { rememberMe } = req.body;
         const result = await query(
             'INSERT INTO users (username, email, hashed_password) VALUES ($1, $2, $3) RETURNING *',
             [username, email, hashedPassword]
         );
 
         const newUser = result.rows[0];
-        const token = createAccessToken({ sub: newUser.email });
+        const expiresIn = rememberMe ? '30d' : '7d';
+        const token = createAccessToken({ sub: newUser.email }, expiresIn);
 
         res.status(200).json({
             access_token: token,
@@ -69,7 +71,9 @@ router.post('/login', async (req: Request, res: Response): Promise<void> => {
             return;
         }
 
-        const token = createAccessToken({ sub: user.email });
+        const { rememberMe } = req.body;
+        const expiresIn = rememberMe ? '30d' : '7d';
+        const token = createAccessToken({ sub: user.email }, expiresIn);
 
         res.status(200).json({
             access_token: token,
@@ -164,7 +168,9 @@ router.post('/google', async (req: Request, res: Response): Promise<void> => {
             user = userResult.rows[0];
         }
 
-        const accessToken = createAccessToken({ sub: user.email });
+        const { rememberMe } = req.body;
+        const expiresIn = rememberMe ? '30d' : '7d';
+        const accessToken = createAccessToken({ sub: user.email }, expiresIn);
 
         res.status(200).json({
             access_token: accessToken,

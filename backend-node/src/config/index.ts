@@ -9,7 +9,7 @@ export const config = {
     jwt: {
         secret: process.env.SECRET_KEY || 'change-this-secret-key',
         algorithm: 'HS256' as const,
-        expiresIn: '60m',
+        expiresIn: '7d',
     },
     google: {
         clientId: process.env.GOOGLE_CLIENT_ID || '',

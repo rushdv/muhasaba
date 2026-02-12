@@ -73,13 +73,13 @@ const Dashboard = () => {
     return (
         <div className="min-h-screen bg-transparent pb-12 transition-colors duration-1000">
             {/* Top Bar - Compact for Mobile */}
-            <nav className="bg-white/40 dark:bg-obsidian-900/40 backdrop-blur-3xl border-b border-gold-soft/10 px-4 md:px-8 py-4 md:py-6 flex justify-between items-center sticky top-0 z-50">
+            <nav className="bg-white/40 dark:bg-obsidian-900/40 backdrop-blur-3xl border-b border-gold-soft/10 px-3 md:px-8 py-3 md:py-6 flex justify-between items-center sticky top-0 z-50">
                 <div className="flex items-center gap-3 md:gap-4">
-                    <div className="w-10 h-10 md:w-12 md:h-12 bg-slate-950 dark:bg-obsidian-900 rounded-xl md:rounded-2xl flex items-center justify-center border border-gold-soft/30 shadow-lg group-hover:rotate-12 transition-transform">
-                        <IslamicLogo size={20} className="text-gold-soft" />
+                    <div className="w-10 h-10 md:w-16 md:h-16 bg-slate-950 dark:bg-obsidian-900 rounded-xl md:rounded-2xl flex items-center justify-center border border-gold-soft/30 shadow-lg group-hover:rotate-12 transition-transform overflow-hidden shrink-0">
+                        <IslamicLogo size={window.innerWidth < 768 ? 28 : 44} className="text-gold-soft" />
                     </div>
-                    <div>
-                        <h1 className="text-lg md:text-2xl font-serif font-bold italic tracking-tight text-slate-950 dark:text-gold-soft">{t('common.appName')}</h1>
+                    <div className="min-w-0">
+                        <h1 className="text-base md:text-2xl font-serif font-bold italic tracking-tight text-slate-950 dark:text-gold-soft truncate">{t('common.appName')}</h1>
                     </div>
                 </div>
                 <div className="flex items-center gap-4">
@@ -92,9 +92,11 @@ const Dashboard = () => {
                     <ThemeToggle />
                     <button
                         onClick={logout}
-                        className="flex items-center gap-2 md:gap-3 px-4 md:px-6 py-2 md:py-2.5 bg-white dark:bg-slate-800 border border-gold-soft/20 text-slate-900 dark:text-slate-100 text-[10px] md:text-xs font-bold uppercase tracking-widest rounded-lg md:rounded-xl hover:bg-gold-soft/5 dark:hover:bg-gold-soft/10 transition-all shadow-sm"
+                        className="flex items-center gap-2 md:gap-3 px-3 md:px-6 py-2 md:py-2.5 bg-white dark:bg-slate-800 border border-gold-soft/20 text-slate-900 dark:text-slate-100 text-[10px] md:text-xs font-bold uppercase tracking-widest rounded-lg md:rounded-xl hover:bg-gold-soft/5 dark:hover:bg-gold-soft/10 transition-all shadow-sm"
+                        title={t('common.signOut')}
                     >
-                        <LogOut size={14} className="md:w-4 md:h-4" /> {t('common.signOut')}
+                        <LogOut size={16} className="md:w-4 md:h-4" />
+                        <span className="hidden md:inline">{t('common.signOut')}</span>
                     </button>
                 </div>
             </nav>
@@ -115,8 +117,8 @@ const Dashboard = () => {
                         >
                             <div className={`w-full h-full p-4 md:p-10 rounded-[18px] md:rounded-[28px] transition-all duration-700 flex flex-col justify-between ${m.color} ${m.border || 'border-transparent'} border-2 ${m.color.includes('bg-slate-950') ? 'text-marfil' : 'text-slate-950 dark:text-slate-100'}`}>
                                 <div className="space-y-3 md:space-y-6">
-                                    <div className={`w-10 h-10 md:w-16 md:h-16 rounded-lg md:rounded-2xl flex items-center justify-center transition-transform duration-700 group-hover:scale-110 group-hover:rotate-6 ${m.color.includes('bg-slate-950') ? 'bg-white/10' : 'bg-slate-50 dark:bg-slate-800/10'}`}>
-                                        <div className={m.textColor}>{React.cloneElement(m.icon, { size: window.innerWidth < 768 ? 20 : 32 })}</div>
+                                    <div className={`w-12 h-12 md:w-20 md:h-20 rounded-lg md:rounded-2xl flex items-center justify-center transition-transform duration-700 group-hover:scale-110 group-hover:rotate-6 overflow-hidden ${m.color.includes('bg-slate-950') ? 'bg-white/10' : 'bg-slate-50 dark:bg-slate-800/10'}`}>
+                                        <div className={m.textColor}>{React.cloneElement(m.icon, { size: window.innerWidth < 768 ? 32 : 56 })}</div>
                                     </div>
                                     <h3 className="text-xl md:text-3xl font-serif font-bold italic leading-tight">{m.title}</h3>
                                     <p className={`leading-relaxed line-clamp-2 md:line-clamp-none ${m.color.includes('bg-slate-950') ? 'text-[10px] md:text-sm opacity-60 font-medium' : 'text-slate-900/40 dark:text-slate-100/40 font-bold uppercase tracking-widest text-[8px] md:text-[11px]'}`}>

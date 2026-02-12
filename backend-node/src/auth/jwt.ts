@@ -7,10 +7,10 @@ export interface TokenPayload {
     exp?: number;
 }
 
-export const createAccessToken = (data: { sub: string }): string => {
+export const createAccessToken = (data: { sub: string }, expiresIn?: string | number): string => {
     return jwt.sign(data, config.jwt.secret as string, {
         algorithm: config.jwt.algorithm,
-        expiresIn: config.jwt.expiresIn,
+        expiresIn: expiresIn || config.jwt.expiresIn,
     } as any);
 };
 
