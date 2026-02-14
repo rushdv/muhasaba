@@ -6,10 +6,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.verifyToken = exports.createAccessToken = void 0;
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const config_1 = require("../config");
-const createAccessToken = (data) => {
+const createAccessToken = (data, expiresIn) => {
     return jsonwebtoken_1.default.sign(data, config_1.config.jwt.secret, {
         algorithm: config_1.config.jwt.algorithm,
-        expiresIn: config_1.config.jwt.expiresIn,
+        expiresIn: expiresIn || config_1.config.jwt.expiresIn,
     });
 };
 exports.createAccessToken = createAccessToken;

@@ -5,6 +5,6 @@ export interface TokenPayload {
 }
 export declare const createAccessToken: (data: {
     sub: string;
-}) => string;
+}, expiresIn?: string | number) => string;
 export declare const verifyToken: (token: string) => TokenPayload;
 //# sourceMappingURL=jwt.d.ts.map
