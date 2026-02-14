@@ -8,6 +8,7 @@ import {
   Compass,
   Heart,
   MessageSquare,
+  RefreshCw,
   Save,
   Smile,
   Sparkles,
@@ -20,6 +21,7 @@ import { useNavigate } from "react-router-dom";
 import {
   getRamadanContent,
   getRamadanHistory,
+  getRandomAyat,
   upsertRamadanReport,
 } from "../api/ramadan";
 import ThemeToggle from "../components/ThemeToggle";
@@ -33,6 +35,8 @@ const RamadanPlanner = () => {
   const [history, setHistory] = useState([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [displayedAyat, setDisplayedAyat] = useState(null);
+  const [loadingAyat, setLoadingAyat] = useState(false);
 
   // Initial Form State
   const initialReport = {
@@ -78,6 +82,24 @@ const RamadanPlanner = () => {
   useEffect(() => {
     fetchInitialData();
   }, [day]);
+
+  useEffect(() => {
+    if (content?.ayat) {
+      setDisplayedAyat(content.ayat);
+    }
+  }, [content]);
+
+  const handleRefreshAyat = async () => {
+    setLoadingAyat(true);
+    try {
+      const newAyat = await getRandomAyat();
+      setDisplayedAyat(newAyat);
+    } catch (error) {
+      console.error("Failed to fetch random ayat", error);
+    } finally {
+      setLoadingAyat(false);
+    }
+  };
 
   const fetchInitialData = async () => {
     setLoading(true);
@@ -221,25 +243,59 @@ const RamadanPlanner = () => {
             <div className="absolute -top-10 -right-10 opacity-[0.03] transition-transform duration-1000 group-hover:rotate-12">
               <Compass size={280} />
             </div>
-            <header className="flex items-center gap-3 mb-8">
-              <div className="w-10 h-10 rounded-full bg-gold-soft/10 flex items-center justify-center text-gold-rich">
-                <BookOpen size={20} />
+            <header className="flex items-center justify-between mb-8 relative z-10">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-full bg-gold-soft/10 flex items-center justify-center text-gold-rich">
+                  <BookOpen size={20} />
+                </div>
+                <div>
+                  <h2 className="text-xs uppercase font-bold tracking-widest text-gold-rich">
+                    {t("ramadan.ayat")}
+                  </h2>
+                  {displayedAyat?.surah_name && (
+                    <p className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider mt-0.5">
+                      {displayedAyat.surah_name} ({displayedAyat.reference})
+                    </p>
+                  )}
+                </div>
               </div>
-              <h2 className="text-xs uppercase font-bold tracking-widest text-gold-rich">
-                {t("ramadan.ayat")}
-              </h2>
+              <button
+                onClick={handleRefreshAyat}
+                disabled={loadingAyat}
+                className="p-2 rounded-full hover:bg-gold-soft/10 text-gold-rich transition-colors"
+                title="Get Random Ayat"
+              >
+                <RefreshCw
+                  size={16}
+                  className={loadingAyat ? "animate-spin" : ""}
+                />
+              </button>
             </header>
-            <div className="space-y-6 relative z-10">
+            <div
+              className={`space-y-6 relative z-10 transition-opacity duration-300 ${
+                loadingAyat ? "opacity-50" : "opacity-100"
+              }`}
+            >
               <p
                 className="text-2xl md:text-3xl font-serif leading-relaxed text-right text-slate-900/90 dark:text-slate-50/90"
                 dir="rtl"
               >
-                {content?.ayat?.arabic}
+                {displayedAyat?.arabic}
               </p>
-              {content?.ayat?.meaning && (
-                <p className="text-sm italic leading-relaxed text-slate-800 dark:text-slate-200 font-medium">
-                  "{content?.ayat?.meaning}"
-                </p>
+              {displayedAyat?.meaning && (
+                <div className="space-y-2">
+                  <p className="text-sm italic leading-relaxed text-slate-800 dark:text-slate-200 font-medium">
+                    "{displayedAyat?.meaning}"
+                  </p>
+                  {displayedAyat?.surah_name_ar && (
+                    <p
+                      className="text-xs text-right opacity-60 font-serif"
+                      dir="rtl"
+                    >
+                      سورة {displayedAyat.surah_name_ar}
+                    </p>
+                  )}
+                </div>
               )}
             </div>
           </section>
