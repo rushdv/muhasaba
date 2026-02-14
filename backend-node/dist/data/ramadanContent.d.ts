@@ -5,8 +5,10 @@ interface Name {
 }
 interface DayContent {
     ayat: {
-        arabic: string;
-        meaning: string;
+        surah: number;
+        ayah: number;
+        arabic_fallback?: string;
+        meaning_fallback?: string;
     };
     hadith: string;
     dua: {
@@ -15,6 +17,11 @@ interface DayContent {
     };
     names: Name[];
 }
+/**
+ * Helper function to retrieve content for a specific day of Ramadan.
+ * @param day - Day of Ramadan (1 to 30)
+ * @returns The content for the given day or null if out of range.
+ */
 export declare const getRamadanDayContent: (day: number) => DayContent | null;
 export {};
 //# sourceMappingURL=ramadanContent.d.ts.map
