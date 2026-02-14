@@ -5,6 +5,11 @@ export const getRamadanContent = async (day) => {
   return res.data;
 };
 
+export const getRandomAyat = async () => {
+  const res = await api.get("/day-content/random-ayat/get");
+  return res.data;
+};
+
 export const upsertRamadanReport = async (payload) => {
   const res = await api.post("/ramadan/report", payload);
   return res.data;
