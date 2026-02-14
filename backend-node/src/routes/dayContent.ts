@@ -11,6 +11,7 @@ const contentCache: Record<string, any> = {};
 // Get random ayat
 router.get("/random-ayat/get", async (req: Request, res: Response) => {
   try {
+    console.log("[Content] Random ayat request received");
     // 1. Get random verse
     const randomRes = await fetch(
       `${QURAN_API_BASE}/verses/random?translations=161,131&fields=text_uthmani`
@@ -21,11 +22,31 @@ router.get("/random-ayat/get", async (req: Request, res: Response) => {
 
     // 2. Get chapter info for this verse
     const chapterId = verse.chapter_id;
-    const chapterRes = await fetch(
-      `${QURAN_API_BASE}/chapters/${chapterId}?language=en`
+    console.log(`[Content] Random Ayat - Fetching chapter ${chapterId}`);
+
+    // Add separate processing for chapter to avoid crashing if it fails
+    let chapter = { name_simple: "Surah", name_arabic: "" };
+    try {
+      const chapterRes = await fetch(
+        `${QURAN_API_BASE}/chapters/${chapterId}?language=en`
+      );
+      if (chapterRes.ok) {
+        const chapterData: any = await chapterRes.json();
+        if (chapterData.chapter) {
+          chapter = chapterData.chapter;
+        }
+      } else {
+        console.error(
+          `[Content] Failed to fetch random chapter info: ${chapterRes.status}`
+        );
+      }
+    } catch (chapErr) {
+      console.error(`[Content] Error fetching random chapter info:`, chapErr);
+    }
+
+    console.log(
+      `[Content] Random Ayat - Chapter Name resolved: ${chapter.name_simple}`
     );
-    const chapterData: any = await chapterRes.json();
-    const chapter = chapterData.chapter;
 
     const bnTranslation = verse.translations.find(
       (t: any) => t.resource_id === 161
@@ -47,6 +68,7 @@ router.get("/random-ayat/get", async (req: Request, res: Response) => {
       surah_name_ar: chapter.name_arabic,
     };
 
+    console.log("[Content] Sending random ayat data");
     res.json(ayatData);
   } catch (error) {
     console.error("Error fetching random ayat:", error);
@@ -64,10 +86,12 @@ router.get("/:day", async (req: Request, res: Response) => {
     }
 
     // Check cache for daily content
-    if (contentCache[day]) {
-      res.json(contentCache[day]);
-      return;
-    }
+    // DISABLED CACHE FOR DEBUGGING
+    // if (contentCache[day]) {
+    //   console.log(`[Content] Serving day ${day} from cache`);
+    //   res.json(contentCache[day]);
+    //   return;
+    // }
 
     // Get static content
     const staticContent = getRamadanDayContent(day);
@@ -77,6 +101,9 @@ router.get("/:day", async (req: Request, res: Response) => {
     }
 
     const { surah, ayah } = staticContent.ayat;
+    console.log(
+      `[Content] Fetching external data for Day ${day}: Surah ${surah}, Ayah ${ayah}`
+    );
 
     // Fetch Verse and Chapter Info in parallel
     const [verseRes, chapterRes] = await Promise.all([
@@ -86,13 +113,26 @@ router.get("/:day", async (req: Request, res: Response) => {
       fetch(`${QURAN_API_BASE}/chapters/${surah}?language=en`),
     ]);
 
-    if (!verseRes.ok) throw new Error("Failed to fetch verse");
+    if (!verseRes.ok) {
+      console.error(`[Content] Failed to fetch verse: ${verseRes.statusText}`);
+      throw new Error("Failed to fetch verse");
+    }
+    if (!chapterRes.ok) {
+      console.error(
+        `[Content] Failed to fetch chapter: ${chapterRes.statusText}`
+      );
+      // Don't fail completely if chapter info missing, just log
+    }
 
     const verseData: any = await verseRes.json();
-    const chapterData: any = await chapterRes.json();
+    const chapterData: any = chapterRes.ok
+      ? await chapterRes.json()
+      : { chapter: {} };
 
     const verse = verseData.verse;
     const chapter = chapterData.chapter;
+
+    console.log(`[Content] Fetched Surah Name: ${chapter.name_simple}`);
 
     const bnTranslation = verse.translations.find(
       (t: any) => t.resource_id === 161
@@ -117,6 +157,7 @@ router.get("/:day", async (req: Request, res: Response) => {
       },
     };
 
+    // Update cache
     contentCache[day] = enrichedContent;
     res.json(enrichedContent);
   } catch (error) {

@@ -16,7 +16,7 @@ import {
   Target,
   Zap,
 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   getRamadanContent,
@@ -26,6 +26,45 @@ import {
 } from "../api/ramadan";
 import ThemeToggle from "../components/ThemeToggle";
 import { useLanguage } from "../context/LanguageContext";
+
+// Initial Form State
+const initialReport = {
+  is_fasting: false,
+  salah_fajr: false,
+  salah_dhuhr: false,
+  salah_asr: false,
+  salah_maghrib: false,
+  salah_isha: false,
+  taraweeh: false,
+  tahajjud: false,
+  duha: false,
+  tahiyatul_masjid: false,
+  tahiyatul_wudu: false,
+  sunnat_fajr: false,
+  sunnat_dhuhr: false,
+  sunnat_asr: false,
+  sunnat_maghrib: false,
+  sunnat_isha: false,
+  quran_para: "",
+  quran_page: "",
+  quran_ayat: "",
+  quran_progress: "",
+  sokal_er_zikr: false,
+  shondha_er_zikr: false,
+  had_sadaqah: false,
+  daily_task: false,
+  jamaat_salat: false,
+  istighfar_70: false,
+  quran_translation: false,
+  allahur_naam_shikkha: false,
+  diner_ayat_shikkha: false,
+  diner_hadith_shikkha: false,
+  miswak: false,
+  calling_relative: false,
+  learning_new: false,
+  spiritual_energy: 5,
+  reflection_note: "",
+};
 
 const RamadanPlanner = () => {
   const navigate = useNavigate();
@@ -38,70 +77,9 @@ const RamadanPlanner = () => {
   const [displayedAyat, setDisplayedAyat] = useState(null);
   const [loadingAyat, setLoadingAyat] = useState(false);
 
-  // Initial Form State
-  const initialReport = {
-    is_fasting: false,
-    salah_fajr: false,
-    salah_dhuhr: false,
-    salah_asr: false,
-    salah_maghrib: false,
-    salah_isha: false,
-    taraweeh: false,
-    tahajjud: false,
-    duha: false,
-    tahiyatul_masjid: false,
-    tahiyatul_wudu: false,
-    sunnat_fajr: false,
-    sunnat_dhuhr: false,
-    sunnat_asr: false,
-    sunnat_maghrib: false,
-    sunnat_isha: false,
-    quran_para: "",
-    quran_page: "",
-    quran_ayat: "",
-    quran_progress: "",
-    sokal_er_zikr: false,
-    shondha_er_zikr: false,
-    had_sadaqah: false,
-    daily_task: false,
-    jamaat_salat: false,
-    istighfar_70: false,
-    quran_translation: false,
-    allahur_naam_shikkha: false,
-    diner_ayat_shikkha: false,
-    diner_hadith_shikkha: false,
-    miswak: false,
-    calling_relative: false,
-    learning_new: false,
-    spiritual_energy: 5,
-    reflection_note: "",
-  };
-
   const [report, setReport] = useState(initialReport);
 
-  useEffect(() => {
-    fetchInitialData();
-  }, [day]);
-
-  useEffect(() => {
-    if (content?.ayat) {
-      setDisplayedAyat(content.ayat);
-    }
-  }, [content]);
-
-  const handleRefreshAyat = async () => {
-    setLoadingAyat(true);
-    try {
-      const newAyat = await getRandomAyat();
-      setDisplayedAyat(newAyat);
-    } catch (error) {
-      console.error("Failed to fetch random ayat", error);
-    } finally {
-      setLoadingAyat(false);
-    }
-  };
-
-  const fetchInitialData = async () => {
+  const fetchInitialData = useCallback(async () => {
     setLoading(true);
     // Fetch public content (no auth required)
     try {
@@ -127,6 +105,44 @@ const RamadanPlanner = () => {
       setReport({ ...initialReport, day_number: day });
     } finally {
       setLoading(false);
+    }
+  }, [day]);
+
+  useEffect(() => {
+    fetchInitialData();
+  }, [fetchInitialData]);
+
+  useEffect(() => {
+    // Try to load stored ayat for this day from localStorage
+    const storedAyat = localStorage.getItem(`ayat-day-${day}`);
+    if (storedAyat) {
+      try {
+        setDisplayedAyat(JSON.parse(storedAyat));
+      } catch (e) {
+        console.error("Failed to parse stored ayat", e);
+        // Fall back to content ayat if parsing fails
+        if (content?.ayat) {
+          setDisplayedAyat(content.ayat);
+        }
+      }
+    } else if (content?.ayat) {
+      // No stored ayat, use the one from content
+      setDisplayedAyat(content.ayat);
+    }
+  }, [content, day]);
+
+  const handleRefreshAyat = async () => {
+    console.log("Refreshing ayat...");
+    setLoadingAyat(true);
+    try {
+      const newAyat = await getRandomAyat();
+      setDisplayedAyat(newAyat);
+      // Store in localStorage so it persists across page reloads
+      localStorage.setItem(`ayat-day-${day}`, JSON.stringify(newAyat));
+    } catch (error) {
+      console.error("Failed to fetch random ayat", error);
+    } finally {
+      setLoadingAyat(false);
     }
   };
 
@@ -252,9 +268,10 @@ const RamadanPlanner = () => {
                   <h2 className="text-xs uppercase font-bold tracking-widest text-gold-rich">
                     {t("ramadan.ayat")}
                   </h2>
-                  {displayedAyat?.surah_name && (
+                  {displayedAyat && (
                     <p className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider mt-0.5">
-                      {displayedAyat.surah_name} ({displayedAyat.reference})
+                      {displayedAyat.surah_name || "Surah"} (
+                      {displayedAyat.reference || "?"})
                     </p>
                   )}
                 </div>
