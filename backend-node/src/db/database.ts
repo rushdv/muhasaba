@@ -14,7 +14,6 @@ pool.on('connect', () => {
 
 pool.on('error', (err: any) => {
   console.error('❌ Unexpected database error:', err);
-  process.exit(-1);
 });
 
 export const query = async (text: string, params?: any[]) => {
