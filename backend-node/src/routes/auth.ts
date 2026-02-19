@@ -90,13 +90,19 @@ router.post('/google', async (req: Request, res: Response): Promise<void> => {
     try {
         const { token } = req.body;
 
-        if (!config.google.clientId) {
-            console.error('❌ CRITICAL: GOOGLE_CLIENT_ID is missing from environment!');
-            res.status(500).json({ detail: 'GOOGLE_CLIENT_ID is not set in backend environment' });
+        if (!token) {
+            console.error('❌ Error: No token provided in request body');
+            res.status(400).json({ detail: 'No Google token provided' });
             return;
         }
 
-        console.log(`DEBUG: Using Google Client ID: ${config.google.clientId.substring(0, 10)}...${config.google.clientId.substring(config.google.clientId.length - 10)}`);
+        if (!config.google.clientId) {
+            console.error('❌ CRITICAL: GOOGLE_CLIENT_ID is missing from environment!');
+            res.status(500).json({ detail: 'GOOGLE_CLIENT_ID is not configured on the server' });
+            return;
+        }
+
+        console.log(`DEBUG: Using Google Client ID: ${config.google.clientId.substring(0, 10)}...`);
         console.log(`DEBUG: Received token (first 20 chars): ${token.substring(0, 20)}...`);
 
         let ticket;

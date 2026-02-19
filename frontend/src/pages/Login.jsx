@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Moon, Shield, User, Mail, Lock, ArrowRight, Eye, EyeOff } from "lucide-react";
 import { login, signup } from "../api/auth";
+import { GoogleLogin } from "@react-oauth/google";
 import api from "../api/client";
 import ThemeToggle from "../components/ThemeToggle";
 import IslamicLogo from "../components/IslamicLogo";
@@ -49,20 +50,18 @@ const Login = () => {
     // =========================
     // Google Login
     // =========================
-
-    // =========================
-    // Google Login (Native Implementation)
-    // =========================
-    const handleGoogleLogin = async (response) => {
+    const handleGoogleLogin = async (credentialResponse) => {
         setError("");
         try {
             const res = await api.post(
                 "/auth/google",
-                { token: response.credential }
+                { token: credentialResponse.credential }
             );
 
-            localStorage.setItem("token", res.data.access_token);
-            navigate("/dashboard");
+            if (res.data.access_token) {
+                localStorage.setItem("token", res.data.access_token);
+                navigate("/dashboard");
+            }
         } catch (err) {
             console.error("Google Login Error:", err);
             setError(
@@ -71,28 +70,6 @@ const Login = () => {
             );
         }
     };
-
-    React.useEffect(() => {
-        /* global google */
-        if (window.google && googleClientId) {
-            google.accounts.id.initialize({
-                client_id: googleClientId,
-                callback: handleGoogleLogin,
-            });
-
-            google.accounts.id.renderButton(
-                document.getElementById("google-btn"),
-                {
-                    theme: "outline",
-                    size: "large",
-                    shape: "pill",
-                    width: "240"
-                }
-            );
-        }
-    }, [googleClientId]);
-
-    const handleGoogleSuccess = () => { }; // Replaced by handleGoogleLogin
 
     return (
         <div className="min-h-screen bg-transparent flex items-center justify-center p-6 relative transition-colors duration-1000">
@@ -274,7 +251,17 @@ const Login = () => {
 
                     {/* Google Login */}
                     <div className="flex justify-center">
-                        <div id="google-btn"></div>
+                        <GoogleLogin
+                            onSuccess={handleGoogleLogin}
+                            onError={() => {
+                                console.error("Google Login Failed");
+                                setError(t('auth.googleAuthFailed'));
+                            }}
+                            theme="outline"
+                            size="large"
+                            shape="pill"
+                            width="240"
+                        />
                     </div>
                 </div>
 
