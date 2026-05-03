@@ -1,102 +1,57 @@
-# Muhasabah Backend - Node.js/Express/TypeScript
+# Muhasabah Backend
 
-Complete Node.js/Express.js/TypeScript backend for the Muhasabah application, designed for better Vercel deployment compatibility.
-
-## Features
-
-- ✅ **Authentication**: JWT-based auth with signup, login, and Google OAuth
-- ✅ **Database**: PostgreSQL with connection pooling
-- ✅ **API Routes**: 
-  - `/api/auth/*` - Authentication endpoints
-  - `/api/muhasaba/*` - Daily task logging
-  - `/api/ramadan/*` - Ramadan planner and analytics
-- ✅ **TypeScript**: Full type safety
-- ✅ **CORS**: Configured for frontend integration
+Node.js + Express + TypeScript backend for the Muhasabah app.
 
 ## Setup
 
-### 1. Install Dependencies
-
 ```bash
+# Install dependencies
 npm install
-```
 
-### 2. Configure Environment
-
-Copy `.env.example` to `.env` and update with your credentials:
-
-```bash
+# Copy env file and fill in values
 cp .env.example .env
-```
 
-### 3. Run Development Server
-
-```bash
+# Start dev server
 npm run dev
-```
 
-Server will start on `http://localhost:3000`
-
-### 4. Build for Production
-
-```bash
+# Build for production
 npm run build
+
+# Start production server
 npm start
 ```
 
-## API Endpoints
+## Environment Variables
 
-### Authentication
-- `POST /api/auth/signup` - Create new account
-- `POST /api/auth/login` - Login with email/password
-- `POST /api/auth/google` - Google OAuth login
+```
+DATABASE_URL=postgresql://...
+SECRET_KEY=your-secret-key
+ALGORITHM=HS256
+ACCESS_TOKEN_EXPIRE_MINUTES=60
+GOOGLE_CLIENT_ID=your-google-client-id
+GOOGLE_CLIENT_SECRET=your-google-client-secret
+GOOGLE_REDIRECT_URI=http://localhost:3000/auth/google/callback
+PORT=3000
+NODE_ENV=development
+```
 
-### Muhasaba (Daily Logs)
-- `POST /api/muhasaba` - Create log
-- `GET /api/muhasaba` - Get all logs
-- `PATCH /api/muhasaba/:id` - Toggle completion
-- `DELETE /api/muhasaba/:id` - Delete log
+## API Routes
 
-### Ramadan Planner
-- `GET /api/ramadan/content/:day` - Get spiritual content for day
-- `POST /api/ramadan/report` - Create/update daily report
-- `GET /api/ramadan/history` - Get all reports
-- `GET /api/ramadan/analytics` - Get analytics summary
+| Method | Path | Description |
+|--------|------|-------------|
+| POST | `/api/auth/signup` | Register new user |
+| POST | `/api/auth/login` | Login with email/password |
+| POST | `/api/auth/google` | Login with Google OAuth |
+| GET | `/api/day-content/:day` | Get Ramadan day content (1-30) |
+| GET | `/api/day-content/random-ayat/get` | Get a random Quran verse |
+| GET | `/api/ramadan/history` | Get user's Ramadan reports |
+| POST | `/api/ramadan/report` | Save/update a day's report |
+| GET | `/api/ramadan/analytics` | Get Ramadan analytics summary |
+| GET | `/api/muhasaba` | Get muhasaba logs |
+| POST | `/api/muhasaba` | Create muhasaba log |
+| PATCH | `/api/muhasaba/:id` | Toggle log completion |
+| DELETE | `/api/muhasaba/:id` | Delete muhasaba log |
 
 ## Deployment
 
-### Vercel
-
-1. Push to GitHub
-2. Import project in Vercel
-3. Set environment variables in Vercel dashboard
-4. Deploy!
-
-The `vercel.json` configuration is already set up.
-
-## Project Structure
-
-```
-backend-node/
-├── src/
-│   ├── auth/          # Authentication utilities
-│   ├── config/        # Configuration
-│   ├── data/          # Static data (Ramadan content)
-│   ├── db/            # Database connection
-│   ├── routes/        # API routes
-│   ├── app.ts         # Express app setup
-│   └── server.ts      # Server entry point
-├── dist/              # Compiled JavaScript (generated)
-├── .env               # Environment variables
-├── package.json
-└── tsconfig.json
-```
-
-## Tech Stack
-
-- **Runtime**: Node.js
-- **Framework**: Express.js
-- **Language**: TypeScript
-- **Database**: PostgreSQL (Neon)
-- **Auth**: JWT + Google OAuth
-- **Deployment**: Vercel
+Deployed on Vercel as a serverless function via `api/index.ts`.
