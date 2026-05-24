@@ -5,20 +5,44 @@ import { Sparkles, ArrowLeft, Star, Heart, Book, Activity, Moon, Compass, Chevro
 import ThemeToggle from '../components/ThemeToggle';
 import IslamicLogo from '../components/IslamicLogo';
 import { useLanguage } from '../context/LanguageContext';
+import useWindowSize from '../hooks/useWindowSize';
 
 const RamadanWrapped = () => {
     const [data, setData] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(false);
     const navigate = useNavigate();
     const { language, toggleLanguage, t } = useLanguage();
+    const { width } = useWindowSize();
+    const isMobile = width < 768;
 
     useEffect(() => {
-        getRamadanAnalytics().then(setData).finally(() => setLoading(false));
+        getRamadanAnalytics()
+            .then(setData)
+            .catch((err) => {
+                // 401 = guest user, just show empty state — don't redirect
+                if (err?.response?.status !== 401) {
+                    setError(true);
+                }
+            })
+            .finally(() => setLoading(false));
     }, []);
 
     if (loading) return (
         <div className="min-h-screen bg-transparent flex items-center justify-center">
             <div className="w-16 h-16 border-4 border-gold-soft border-t-transparent rounded-full animate-spin" />
+        </div>
+    );
+
+    if (error) return (
+        <div className="min-h-screen bg-transparent flex flex-col items-center justify-center gap-6 text-slate-950 dark:text-slate-50">
+            <p className="text-lg font-serif italic opacity-60">Could not load your insights. Please try again.</p>
+            <button
+                onClick={() => { setError(false); setLoading(true); getRamadanAnalytics().then(setData).catch(() => setError(true)).finally(() => setLoading(false)); }}
+                className="px-6 py-3 bg-gold-soft text-white rounded-xl font-bold text-sm uppercase tracking-widest hover:bg-gold-rich transition-colors"
+            >
+                Retry
+            </button>
         </div>
     );
 
@@ -35,7 +59,7 @@ const RamadanWrapped = () => {
                     </button>
 
                     <div className="flex items-center gap-2 md:gap-3 overflow-hidden">
-                        <IslamicLogo size={window.innerWidth < 768 ? 24 : 32} className="text-gold-soft shrink-0" />
+                        <IslamicLogo size={isMobile ? 24 : 32} className="text-gold-soft shrink-0" />
                         <h1 className="text-lg md:text-xl font-serif font-bold italic tracking-wider truncate">{t('wrapped.insightsTitle')}</h1>
                     </div>
 
@@ -55,7 +79,7 @@ const RamadanWrapped = () => {
                 {/* Hero Section */}
                 <section className="text-center relative">
                     <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-[0.03] dark:opacity-[0.05] -z-10">
-                        <Compass size={window.innerWidth < 768 ? 300 : 400} />
+                        <Compass size={isMobile ? 300 : 400} />
                     </div>
                     <p className="text-[10px] uppercase font-bold tracking-[0.5em] text-gold-rich mb-4 md:mb-6">{t('wrapped.sacredEvolution')}</p>
                     <h2 className="text-4xl md:text-6xl font-serif font-bold text-slate-950 dark:text-slate-50 italic mb-6 md:mb-8 leading-tight">{t('wrapped.spiritualWrapped')}</h2>
@@ -103,7 +127,7 @@ const RamadanWrapped = () => {
                 {/* Quran Summary Section */}
                 <section className="celestial-card border-beam p-6 md:p-12 relative overflow-hidden group">
                     <div className="absolute top-0 right-0 p-4 md:p-8 opacity-[0.05] group-hover:scale-110 transition-transform duration-1000">
-                        <Star size={window.innerWidth < 768 ? 60 : 120} className="text-gold-rich" />
+                        <Star size={isMobile ? 60 : 120} className="text-gold-rich" />
                     </div>
                     <header className="mb-6 md:mb-10">
                         <h3 className="text-2xl md:text-3xl font-serif font-bold italic text-slate-950 dark:text-slate-50 mb-2">{t('wrapped.quranicProgress')}</h3>
@@ -135,10 +159,12 @@ const RamadanWrapped = () => {
 const WrappedCard = ({ icon, title, value, subtitle, accent }) => (
     <div className="celestial-card border-beam p-4 md:p-8 group transition-all duration-500 hover:-translate-y-2">
         <div className={`w-9 h-9 md:w-12 md:h-12 rounded-xl md:rounded-2xl flex items-center justify-center mb-3 md:mb-6 transition-all duration-500 group-hover:scale-110 group-hover:rotate-6 ${accent === 'gold' ? 'bg-gold-soft/10 text-gold-rich' : 'bg-slate-100 dark:bg-obsidian-900 text-slate-900 dark:text-slate-50'}`}>
-            {React.cloneElement(icon, { size: window.innerWidth < 768 ? 18 : 24 })}
+            {/* Use CSS responsive sizing instead of JS window.innerWidth */}
+            <span className="block md:hidden">{React.cloneElement(icon, { size: 18 })}</span>
+            <span className="hidden md:block">{React.cloneElement(icon, { size: 24 })}</span>
         </div>
         <h3 className="text-[8px] md:text-[10px] uppercase font-bold tracking-[0.2em] text-slate-950/40 dark:text-slate-50/40 mb-1 md:mb-2">{title}</h3>
-        <p className="text-2xl md:text-4xl font-serif font-bold text-slate-950 dark:text-slate-50 mb-0.5 md:mb-2">{value}</p>
+        <p className="text-2xl md:text-4xl font-serif font-bold text-slate-950 dark:text-slate-50 mb-0.5 md:mb-2">{value ?? '—'}</p>
         <p className="text-[9px] md:text-[11px] font-bold text-slate-900/60 dark:text-slate-100/60 leading-tight uppercase tracking-wider">{subtitle}</p>
     </div>
 );
