@@ -5,10 +5,16 @@ node_modules/
 dist/
 dist-ssr/
 
-# Environment variables
+# Environment variables — NEVER commit these
 .env
 .env.local
 .env.*.local
+.env.development
+.env.production
+.env.staging
+server/.env
+server/.env.local
+server/.env.*.local
 
 # Logs
 logs/
