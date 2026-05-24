@@ -1,62 +1,44 @@
-import { Request, Response, NextFunction } from 'express';
-import { verifyToken } from './jwt';
-import { query } from '../db/database';
+import { Request, Response, NextFunction } from "express";
+import { auth } from "./auth";
+import { toNodeHandler } from "better-auth/node";
 
-export interface User {
-    id: number;
-    username: string;
-    email: string;
-    hashed_password: string;
-    is_active: boolean;
+export interface BetterAuthUser {
+  id: string;
+  name: string;
+  email: string;
+  emailVerified: boolean;
+  image?: string | null;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export interface AuthRequest extends Request {
-    user?: User;
+  user?: BetterAuthUser;
 }
 
+/**
+ * Express middleware that validates the Better Auth session.
+ * Reads the session from the cookie (or Authorization header via Bearer token).
+ * Attaches the user to req.user if valid, otherwise returns 401.
+ */
 export const getCurrentUser = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
+  req: Request,
+  res: Response,
+  next: NextFunction
 ): Promise<void> => {
-    try {
-        const authHeader = req.headers.authorization;
+  try {
+    const session = await auth.api.getSession({
+      headers: req.headers as any,
+    });
 
-        if (!authHeader || !authHeader.startsWith('Bearer ')) {
-            res.status(401).json({ detail: 'Could not validate credentials' });
-            return;
-        }
-
-        const token = authHeader.substring(7); // Remove 'Bearer ' prefix
-
-        try {
-            const payload = verifyToken(token);
-            const email = payload.sub;
-
-            if (!email) {
-                res.status(401).json({ detail: 'Could not validate credentials' });
-                return;
-            }
-
-            // Fetch user from database
-            const result = await query(
-                'SELECT * FROM users WHERE email = $1',
-                [email]
-            );
-
-            if (result.rows.length === 0) {
-                res.status(401).json({ detail: 'Could not validate credentials' });
-                return;
-            }
-
-            (req as AuthRequest).user = result.rows[0];
-            next();
-        } catch (error) {
-            res.status(401).json({ detail: 'Could not validate credentials' });
-            return;
-        }
-    } catch (error) {
-        res.status(401).json({ detail: 'Could not validate credentials' });
-        return;
+    if (!session?.user) {
+      res.status(401).json({ detail: "Could not validate credentials" });
+      return;
     }
+
+    (req as AuthRequest).user = session.user as BetterAuthUser;
+    next();
+  } catch {
+    res.status(401).json({ detail: "Could not validate credentials" });
+  }
 };
