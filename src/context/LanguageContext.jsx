@@ -19,13 +19,18 @@ export const LanguageProvider = ({ children }) => {
         let value = translations[language];
 
         for (const k of keys) {
-            if (value[k]) {
+            if (value !== undefined && value !== null && typeof value === 'object' && k in value) {
                 value = value[k];
             } else {
-                // Fallback to English if translation is missing
+                // Fallback to English if translation key is missing
                 let fallback = translations['en'];
                 for (const fk of keys) {
-                    fallback = fallback[fk] || key;
+                    if (fallback !== undefined && fallback !== null && typeof fallback === 'object' && fk in fallback) {
+                        fallback = fallback[fk];
+                    } else {
+                        fallback = key;
+                        break;
+                    }
                 }
                 value = fallback;
                 break;
