@@ -10,12 +10,13 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@react-oauth/google": "^0.12.1",
     "axios": "^1.7.2",
+    "better-auth": "^1.6.9",
     "lucide-react": "^0.395.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "react-router-dom": "^7.1.1"
+    "react-router-dom": "^7.1.1",
+    "sonner": "2.0.7"
   },
   "devDependencies": {
     "@eslint/js": "^9.9.0",
