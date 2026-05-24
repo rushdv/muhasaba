@@ -1,6 +1,7 @@
 import { Request, Response, Router } from "express";
 import { AuthRequest, getCurrentUser } from "../auth/deps";
 import { query } from "../db/database";
+// Note: Better Auth user IDs are UUIDs (string), not integers
 
 const router: Router = Router();
 

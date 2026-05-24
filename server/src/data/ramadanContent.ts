@@ -419,7 +419,7 @@ const RAMADAN_CONTENT: Record<number, DayContent> = {
         meaning: "পুনরুজ্জীবিতকারী",
       },
       {
-        arabic: "الشَّكُورُ",
+        arabic: "الشَّهِيدُ",
         pronunciation: "Ash-Shahid",
         meaning: "প্রত্যক্ষদর্শী",
       },
@@ -566,7 +566,7 @@ const RAMADAN_CONTENT: Record<number, DayContent> = {
     ayat: { surah: 7, ayah: 56 },
     hadith: "আল্লাহর রহমত তাঁর ক্রোধের উপর প্রবল হয়। (সহীহ বুখারী: ৩১৯৪)",
     dua: {
-      arabic: "رَبَّنَا لا تُزِغْ قُلُوبَنَا بَعْدَ إِذْ হَدَيْتَنَا",
+      arabic: "رَبَّنَا لَا تُزِغْ قُلُوبَنَا بَعْدَ إِذْ هَدَيْتَنَا",
       meaning:
         "হে আমাদের প্রতিপালক! আমাদের হেদায়েত দেওয়ার পর আমাদের অন্তরকে পথভ্রষ্ট করবেন না।",
     },

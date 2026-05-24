@@ -5,6 +5,67 @@ import { query } from "../db/database";
 
 const router: Router = Router();
 
+// Whitelist of allowed fields for ramadan_reports to prevent mass assignment / SQL injection
+const ALLOWED_REPORT_FIELDS = [
+  "is_fasting",
+  "salah_fajr",
+  "salah_dhuhr",
+  "salah_asr",
+  "salah_maghrib",
+  "salah_isha",
+  "taraweeh",
+  "tahajjud",
+  "duha",
+  "tahiyatul_masjid",
+  "tahiyatul_wudu",
+  "sunnat_fajr",
+  "sunnat_dhuhr",
+  "sunnat_asr",
+  "sunnat_maghrib",
+  "sunnat_isha",
+  "quran_para",
+  "quran_page",
+  "quran_ayat",
+  "quran_progress",
+  "sokal_er_zikr",
+  "shondha_er_zikr",
+  "had_sadaqah",
+  "daily_task",
+  "jamaat_salat",
+  "istighfar_70",
+  "quran_translation",
+  "allahur_naam_shikkha",
+  "diner_ayat_shikkha",
+  "diner_hadith_shikkha",
+  "miswak",
+  "calling_relative",
+  "learning_new",
+  "spiritual_energy",
+  "reflection_note",
+] as const;
+
+type AllowedField = (typeof ALLOWED_REPORT_FIELDS)[number];
+
+// Sanitize incoming report data — only keep whitelisted fields
+const sanitizeReportData = (
+  body: Record<string, any>
+): Partial<Record<AllowedField, any>> => {
+  const sanitized: Partial<Record<AllowedField, any>> = {};
+  for (const field of ALLOWED_REPORT_FIELDS) {
+    if (field in body) {
+      sanitized[field] = body[field];
+    }
+  }
+  return sanitized;
+};
+
+// Validate day_number
+const validateDayNumber = (day: any): number | null => {
+  const parsed = parseInt(day, 10);
+  if (isNaN(parsed) || parsed < 1 || parsed > 30) return null;
+  return parsed;
+};
+
 // Get spiritual content for a specific day
 router.get(
   "/content/:day",
@@ -33,20 +94,34 @@ router.post(
   async (req: Request, res: Response): Promise<void> => {
     try {
       const userId = (req as AuthRequest).user!.id;
-      const reportData = req.body;
+
+      // Validate day_number
+      const dayNumber = validateDayNumber(req.body.day_number);
+      if (dayNumber === null) {
+        res
+          .status(400)
+          .json({ detail: "Invalid day_number. Must be between 1 and 30." });
+        return;
+      }
+
+      // Sanitize — only whitelisted fields allowed
+      const reportData = sanitizeReportData(req.body);
+
+      if (Object.keys(reportData).length === 0) {
+        res.status(400).json({ detail: "No valid fields provided." });
+        return;
+      }
 
       // Check if report exists
       const existingReport = await query(
-        "SELECT * FROM ramadan_reports WHERE user_id = $1 AND day_number = $2",
-        [userId, reportData.day_number]
+        "SELECT id FROM ramadan_reports WHERE user_id = $1 AND day_number = $2",
+        [userId, dayNumber]
       );
 
       let result;
       if (existingReport.rows.length > 0) {
-        // Update existing report
-        const fields = Object.keys(reportData).filter(
-          (k) => k !== "day_number"
-        );
+        // Update existing report — fields are whitelisted, safe to use as column names
+        const fields = Object.keys(reportData) as AllowedField[];
         const setClause = fields
           .map((field, idx) => `${field} = $${idx + 3}`)
           .join(", ");
@@ -54,28 +129,19 @@ router.post(
 
         result = await query(
           `UPDATE ramadan_reports SET ${setClause}, log_date = CURRENT_DATE WHERE user_id = $1 AND day_number = $2 RETURNING *`,
-          [userId, reportData.day_number, ...values]
+          [userId, dayNumber, ...values]
         );
       } else {
         // Create new report
-        const fields = [
-          "user_id",
-          "day_number",
-          ...Object.keys(reportData).filter((k) => k !== "day_number"),
-        ];
-        const placeholders = fields.map((_, idx) => `$${idx + 1}`).join(", ");
-        const values = [
-          userId,
-          reportData.day_number,
-          ...Object.keys(reportData)
-            .filter((k) => k !== "day_number")
-            .map((k) => reportData[k]),
-        ];
+        const fields = Object.keys(reportData) as AllowedField[];
+        const allFields = ["user_id", "day_number", ...fields];
+        const placeholders = allFields
+          .map((_, idx) => `$${idx + 1}`)
+          .join(", ");
+        const values = [userId, dayNumber, ...fields.map((f) => reportData[f])];
 
         result = await query(
-          `INSERT INTO ramadan_reports (${fields.join(
-            ", "
-          )}) VALUES (${placeholders}) RETURNING *`,
+          `INSERT INTO ramadan_reports (${allFields.join(", ")}) VALUES (${placeholders}) RETURNING *`,
           values
         );
       }
@@ -177,7 +243,7 @@ router.get(
       res.status(200).json({
         total_fasted_days: fastedDays,
         salah_consistency_percentage: Math.round(salahConsistency * 10) / 10,
-        quran_summary: quranList.slice(-5), // Last 5 updates
+        quran_summary: quranList.slice(-5),
         total_names_memorized: namesMemorized,
         avg_spiritual_energy: Math.round(avgEnergy * 10) / 10,
         total_sadaqah_days: sadaqahDays,
