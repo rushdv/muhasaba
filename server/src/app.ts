@@ -1,8 +1,9 @@
 import cors from "cors";
 import express, { Application, Request, Response } from "express";
+import { toNodeHandler } from "better-auth/node";
+import { auth } from "./auth/auth";
 import { config } from "./config";
 import { initDatabase } from "./db/database";
-import authRoutes from "./routes/auth";
 import dayContentRoutes from "./routes/dayContent";
 import muhasabaRoutes from "./routes/muhasaba";
 import quranRoutes from "./routes/quran";
@@ -23,17 +24,11 @@ const initDB = async () => {
     }
   }
 };
-
-// Initialize DB on module load
 initDB();
 
 // =========================
-// Middleware
+// CORS — must be before Better Auth handler
 // =========================
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-
-// CORS Configuration
 app.use(
   cors({
     origin: config.cors.origins,
@@ -44,42 +39,42 @@ app.use(
 );
 
 // =========================
-// Routes
+// Better Auth handler
+// Handles all /api/auth/* routes automatically:
+//   POST /api/auth/sign-up/email
+//   POST /api/auth/sign-in/email
+//   POST /api/auth/sign-in/social  (Google)
+//   POST /api/auth/sign-out
+//   GET  /api/auth/session
+//   GET  /api/auth/callback/google
 // =========================
+app.all("/api/auth/*", toNodeHandler(auth));
 
+// =========================
+// Body parsing (after Better Auth — it reads raw body itself)
+// =========================
+app.use(express.json({ limit: "10kb" }));
+app.use(express.urlencoded({ extended: true, limit: "10kb" }));
+
+// =========================
 // Health check
-app.get("/", (req: Request, res: Response) => {
-  res.json({
-    status: "ok",
-    message: "Muhasabah API - Node.js Backend",
-    path: req.url,
-    originalUrl: req.originalUrl,
-  });
+// =========================
+app.get("/", (_req: Request, res: Response) => {
+  res.json({ status: "ok", message: "Muhasabah API" });
 });
 
-// Auth routes
-app.use("/api/auth", authRoutes);
-app.use("/auth", authRoutes); // Alias for Vercel rewrites
-
-// Muhasaba routes
+// =========================
+// App Routes
+// =========================
 app.use("/api/muhasaba", muhasabaRoutes);
-app.use("/muhasaba", muhasabaRoutes); // Alias for Vercel rewrites
-
-// Ramadan routes
 app.use("/api/ramadan", ramadanRoutes);
-app.use("/ramadan", ramadanRoutes); // Alias for Vercel rewrites
-
-// Quran routes
 app.use("/api/quran", quranRoutes);
-app.use("/quran", quranRoutes); // Alias for Vercel rewrites
-
-// Daily Content (Mixed)
 app.use("/api/day-content", dayContentRoutes);
 
 // =========================
 // Error Handling
 // =========================
-app.use((err: Error, req: Request, res: Response, next: any) => {
+app.use((err: Error, _req: Request, res: Response, _next: any) => {
   console.error("Unhandled error:", err);
   res.status(500).json({ detail: "Internal server error" });
 });
