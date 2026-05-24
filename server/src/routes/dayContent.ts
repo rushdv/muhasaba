@@ -86,12 +86,11 @@ router.get("/:day", async (req: Request, res: Response) => {
     }
 
     // Check cache for daily content
-    // DISABLED CACHE FOR DEBUGGING
-    // if (contentCache[day]) {
-    //   console.log(`[Content] Serving day ${day} from cache`);
-    //   res.json(contentCache[day]);
-    //   return;
-    // }
+    if (contentCache[day]) {
+      console.log(`[Content] Serving day ${day} from cache`);
+      res.json(contentCache[day]);
+      return;
+    }
 
     // Get static content
     const staticContent = getRamadanDayContent(day);
